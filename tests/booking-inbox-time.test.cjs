@@ -1,0 +1,16 @@
+const fs=require('node:fs');
+const vm=require('node:vm');
+const assert=require('node:assert/strict');
+const html=fs.readFileSync('web/merchant.html','utf8');
+const start=html.indexOf('  function bookingNotificationTime(');
+assert.notEqual(start,-1,'Inbox needs event-time formatting');
+const end=html.indexOf('  function seenBookingRequestIds(',start);
+const ctx=vm.createContext({});
+vm.runInContext(html.slice(start,end),ctx);
+const format=b=>{ctx.booking=b;return vm.runInContext('bookingNotificationTime(booking)',ctx)};
+assert.match(format({status:'approved',slipUploadedAt:'2026-09-09T05:08:00Z',createdAt:'2026-09-09T05:05:00Z'}),/9 ก\.ย\. 2569.*12:08/);
+assert.match(format({status:'cancelled',cancelledAt:'2026-09-09T05:15:00Z',slipUploadedAt:'2026-09-09T05:08:00Z'}),/12:15/);
+assert.equal(format({status:'cancelled',slipUploadedAt:'2026-09-09T05:08:00Z'}),'ไม่ระบุเวลา');
+assert.equal(format({status:'approved',createdAt:'2026-09-09T05:05:00Z'}),'ไม่ระบุเวลา');
+assert.equal(format({status:'approved',slipUploadedAt:'invalid'}),'ไม่ระบุเวลา');
+console.log('Booking inbox event times: passed');

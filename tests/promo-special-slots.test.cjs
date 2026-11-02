@@ -1,0 +1,10 @@
+const assert=require('node:assert/strict');
+const core=require('../web/promotion-core.js');
+assert.equal(typeof core.isSpecialSlot,'function','special slot classification must exist');
+const campaigns=[{active:true,remaining:0,slots:[{date:'2026-10-01',start:'10:00:00'}]}];
+assert.equal(core.isSpecialSlot(campaigns,'2026-10-01','10:00'),true,'full campaign keeps its special marker');
+assert.equal(core.isSpecialSlot(campaigns,'2026-10-01','13:30'),false);
+assert.equal(core.isSpecialSlot(campaigns,'2026-10-02','10:00'),false);
+assert.equal(core.isSpecialSlot([{...campaigns[0],active:false}],'2026-10-01','10:00'),false);
+assert.equal(core.isSpecialSlot(null,'2026-10-01','10:00'),false);
+console.log('Special slot classification: passed');

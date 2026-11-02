@@ -1,0 +1,2585 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="จองคิว Demo">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Demo Nails | จองคิวทำเล็บ</title>
+<meta name="description" content="จองคิวทำเล็บ Demo Nails เลือกวันและช่วงเวลาที่สะดวกได้ที่นี่">
+<meta property="og:title" content="Demo Nails | จองคิวทำเล็บ">
+<meta property="og:description" content="จองคิวทำเล็บ Demo Nails เลือกวันและช่วงเวลาที่สะดวกได้ที่นี่">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://demo-nails.example.com/">
+<meta property="og:image" content="https://demo-nails.example.com/demo-profile-logo.jpg">
+<meta property="og:locale" content="th_TH">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Demo Nails | จองคิวทำเล็บ">
+<meta name="twitter:description" content="จองคิวทำเล็บ Demo Nails เลือกวันและช่วงเวลาที่สะดวกได้ที่นี่">
+<meta name="twitter:image" content="https://demo-nails.example.com/demo-profile-logo.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;600;700;800&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #C81E45;
+    --success: #2F8F5B;
+    --warning: #FDD835;
+    --empty: #F5F5F5;
+    --border: #E0E0E0;
+    --text: #333;
+    --text-light: #777;
+  }
+  
+  * { box-sizing: border-box; }
+  body { 
+    margin: 0; 
+    font-family: 'Sarabun', sans-serif; 
+    background: #FAFAFA;
+    color: var(--text);
+  }
+  
+  .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+  
+  .header {
+    background: linear-gradient(135deg, #331621, #7A3350);
+    color: white;
+    padding: 30px 20px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .header-logo { font-size: 40px; }
+  
+  .header-content h1 { margin: 0; font-family: 'Kanit', sans-serif; font-size: 28px; }
+  .header-content p { margin: 5px 0 0; opacity: 0.9; }
+  
+  .role-badge {
+    margin-left: auto;
+    background: rgba(255,255,255,0.2);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  
+  .tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--border);
+  }
+  
+  .tab-btn {
+    padding: 12px 20px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-light);
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s;
+  }
+  
+  .tab-btn.active {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+  }
+  
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+  
+  /* Calendar Styles */
+  .calendar-container {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  
+  .calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .calendar-header button {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  
+  .calendar-header h2 {
+    margin: 0;
+    font-family: 'Kanit', sans-serif;
+    font-size: 20px;
+  }
+  
+  .weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .weekday {
+    text-align: center;
+    font-weight: 600;
+    color: var(--text-light);
+    padding: 10px 0;
+  }
+  
+  .days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+  }
+  
+  .day-cell {
+    min-height: 92px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 6px 6px 8px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    background: white;
+    position: relative;
+    transition: all 0.2s;
+    overflow: hidden;
+  }
+  
+  .day-cell:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
+  
+  .day-cell.empty { background: #fafafa; cursor: default; border-color: transparent; }
+  .day-cell.empty:hover { transform: none; box-shadow: none; }
+  
+  .day-number {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    flex-shrink: 0;
+  }
+  
+  .day-chip {
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 5px;
+    padding: 3px 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1.4;
+    flex-shrink: 0;
+  }
+  
+  .day-chip.chip-pending {
+    background: var(--warning);
+    color: #333;
+  }
+  
+  .day-chip.chip-approved {
+    background: var(--success);
+    color: white;
+  }
+  
+  .day-chip-more {
+    font-size: 10.5px;
+    color: var(--text-light);
+    padding: 1px 6px;
+    flex-shrink: 0;
+  }
+  
+  /* Modal Styles */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+  }
+  
+  .modal-card {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  }
+  
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .modal-title {
+    font-family: 'Kanit', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0;
+  }
+  
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: var(--text-light);
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .required-mark { color: var(--danger); }
+  .removal-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .removal-option { position: relative; margin: 0 !important; cursor: pointer; }
+  .removal-option input { position: absolute; opacity: 0; pointer-events: none; }
+  .removal-option span { min-height: 54px; display: flex; align-items: center; justify-content: center; padding: 9px 6px; border: 1px solid var(--border-dark); border-radius: 9px; background: #fff; color: var(--text); font-size: 12px; text-align: center; }
+  .removal-option input:checked + span { border-color: var(--primary); background: var(--primary-soft); color: var(--primary-dark); box-shadow: 0 0 0 2px rgba(113,23,42,.08); }
+  .payment-slip-box { margin-top: 14px; padding: 14px; border: 1px dashed var(--border-dark); border-radius: 10px; background: #fff; }
+  .payment-slip-box input { width: 100%; font-size: 12px; }
+  .payment-slip-preview img { display: block; width: 100%; max-height: 220px; margin-top: 12px; border-radius: 8px; object-fit: contain; }
+  .payment-back-btn { border: 0; background: transparent; color: var(--primary-dark); font: 600 14px 'Sarabun', sans-serif; cursor: pointer; }
+  .payment-deposit-title { margin: 8px 0 3px; color: var(--primary-dark); font: 600 25px/1.25 'Kanit', sans-serif; }
+  .payment-deposit-note { margin: 0 0 10px; color: var(--text-light); font-size: 13px; line-height: 1.5; }
+  .booking-policy { margin:16px 0; padding:15px; border:1px solid #ead6d4; border-radius:14px; background:#fff5f4; color:#756763; }
+  .booking-policy h3 { margin:0 0 9px; color:#986c70; font:600 16px 'Kanit',sans-serif; }
+  .booking-policy ul { margin:0; padding-left:20px; font-size:12px; line-height:1.65; }
+  .booking-policy-accept { display:flex; align-items:flex-start; gap:9px; margin-top:12px; padding-top:11px; border-top:1px solid #eddad7; cursor:pointer; font-size:12px; font-weight:600; }
+  .booking-policy-accept input { width:18px; height:18px; margin:0; accent-color:#c9979c; flex:0 0 auto; }
+  
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 14px;
+  }
+  
+  .form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+  
+  /* Time Selection */
+  .time-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  
+  .time-btn {
+    padding: 12px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    background: white;
+    color: var(--text);
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  
+  .time-btn:hover { transform: translateY(-2px); }
+  
+  .time-btn.selected {
+    background: var(--warning);
+    border-color: var(--warning);
+    color: #333;
+  }
+  
+  .time-btn.booked {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-height: 68px;
+    padding: 8px 4px;
+    cursor: not-allowed;
+    opacity: 1;
+  }
+
+  .time-btn.status-waiting {
+    background: var(--warning);
+    border-color: var(--warning);
+    color: #333;
+  }
+
+  .time-btn.status-paid {
+    background: var(--success);
+    border-color: var(--success);
+    color: white;
+  }
+
+  .time-btn-time { font-size: 13px; font-weight: 700; }
+
+  .time-btn-name {
+    font-size: 11px;
+    font-weight: 500;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .time-btn-status { font-size: 10px; }
+  
+  .selected-times {
+    background: #FFF9E6;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-size: 14px;
+  }
+  
+  .selected-times strong { color: var(--primary); }
+  
+  /* File Upload */
+  .file-upload-box {
+    border: 2px dashed var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  
+  .file-upload-box:hover {
+    border-color: var(--primary);
+    background: #FFF9E6;
+  }
+  
+  .file-upload-box input {
+    display: none;
+  }
+  
+  .file-preview {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  
+  .preview-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+  
+  .form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: 'Kanit', sans-serif;
+  }
+  
+  .btn-primary {
+    background: var(--primary);
+    color: white;
+  }
+  
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(200,30,69,0.3); }
+  
+  .btn-secondary {
+    background: var(--border);
+    color: var(--text);
+  }
+  
+  .btn-secondary:hover { background: #d0d0d0; }
+  
+  /* Payment Page */
+  .payment-container {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  
+  .thank-you {
+    margin-bottom: 30px;
+  }
+  
+  .thank-you h1 {
+    color: var(--success);
+    font-family: 'Kanit', sans-serif;
+    margin: 0 0 10px;
+    font-size: 32px;
+  }
+  
+  .booking-details {
+    background: #F5F5F5;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 20px 0;
+    text-align: left;
+  }
+  
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  
+  .detail-row:last-child { border-bottom: none; }
+  
+  .detail-label { font-weight: 600; color: var(--text-light); }
+  .detail-value { font-weight: 700; color: var(--text); }
+  
+  #qrcode {
+    margin: 30px 0;
+    display: inline-block;
+    padding: 20px;
+    background: #fafafa;
+    border-radius: 12px;
+  }
+  #qrcode img { display:block; width:250px; height:250px; object-fit:contain; }
+  
+  .countdown {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 20px 0;
+  }
+  
+  .countdown-timer {
+    font-family: 'Kanit', sans-serif;
+    font-size: 48px;
+  }
+  
+  /* Admin Panel */
+  .admin-list {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  
+  .booking-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+    gap: 15px;
+  }
+  
+  .booking-item:last-child { border-bottom: none; }
+  
+  .booking-info {
+    flex: 1;
+  }
+  
+  .booking-date {
+    font-weight: 700;
+    font-family: 'Kanit', sans-serif;
+    color: var(--primary);
+  }
+  
+  .booking-customer {
+    font-size: 14px;
+    color: var(--text-light);
+    margin-top: 4px;
+  }
+  
+  .booking-status {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  
+  .status-pending {
+    background: var(--warning);
+    color: #333;
+  }
+  
+  .status-approved {
+    background: var(--success);
+    color: white;
+  }
+  
+  .booking-actions {
+    display: flex;
+    gap: 8px;
+  }
+  
+  .btn-small {
+    padding: 8px 12px;
+    font-size: 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  
+  .btn-approve {
+    background: var(--success);
+    color: white;
+  }
+  
+  .btn-reject {
+    background: #F44336;
+    color: white;
+  }
+  
+  /* Settings */
+  .settings-form {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    max-width: 600px;
+  }
+  
+  .settings-form h3 {
+    font-family: 'Kanit', sans-serif;
+    color: var(--primary);
+    margin-top: 25px;
+  }
+  
+  .settings-form h3:first-child { margin-top: 0; }
+  
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-light);
+  }
+  
+  .empty-state-icon { font-size: 60px; margin-bottom: 20px; }
+  
+  @media (max-width: 768px) {
+    .time-grid { grid-template-columns: repeat(3, 1fr); }
+    .modal-overlay.mobile-quick .time-grid { display: none; }
+    .modal-overlay.mobile-quick .selected-times { margin-bottom: 18px; }
+    .modal-card { padding: 20px; }
+    .booking-item { flex-direction: column; align-items: flex-start; }
+    .booking-actions { width: 100%; }
+    .booking-actions .btn-small { flex: 1; }
+  }
+</style>
+<style>
+  /* Natural studio redesign — intentionally quiet, tactile and human */
+  :root {
+    --primary: #71172a;
+    --primary-dark: #50101d;
+    --primary-soft: #f2e4e6;
+    --success: #557a5c;
+    --success-soft: #e2ebe1;
+    --warning: #e9bd6c;
+    --warning-soft: #f8ebcf;
+    --danger: #a84747;
+    --paper: #f7f4ef;
+    --surface: #fffdfa;
+    --surface-muted: #f2eee8;
+    --border: #d8d1c8;
+    --border-dark: #b9aea3;
+    --text: #292522;
+    --text-light: #716a64;
+    --shadow: 0 14px 36px rgba(57, 42, 37, .08);
+  }
+
+  html { background: var(--paper); }
+  body {
+    background: var(--paper);
+    color: var(--text);
+    font-family: 'Sarabun', sans-serif;
+    line-height: 1.55;
+  }
+  button, input, select, textarea { font: inherit; }
+  button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible,
+  .file-upload-box:focus-within { outline: 3px solid rgba(113, 23, 42, .18); outline-offset: 2px; }
+
+  .container { max-width: 1180px; padding: 38px 28px 64px; }
+  .header {
+    background: transparent;
+    color: var(--text);
+    padding: 4px 2px 28px;
+    margin-bottom: 0;
+    border: 0;
+    border-bottom: 1px solid var(--border-dark);
+    border-radius: 0;
+    gap: 18px;
+  }
+  .header-logo {
+    width: 54px;
+    height: 54px;
+    display: grid;
+    place-items: center;
+    color: var(--primary);
+    border: 1px solid #cbaeb3;
+    border-radius: 50% 50% 46% 54%;
+    transform: rotate(-3deg);
+  }
+  .header-logo svg { width: 28px; height: 28px; transform: rotate(3deg); }
+  .header-content h1 {
+    font-family: 'Kanit', sans-serif;
+    color: var(--primary-dark);
+    font-size: clamp(27px, 3vw, 40px);
+    font-weight: 500;
+    letter-spacing: -.035em;
+    line-height: 1.08;
+  }
+  .header-content p { color: var(--text-light); margin-top: 7px; font-size: 15px; opacity: 1; }
+  .role-badge {
+    color: var(--text);
+    background: transparent;
+    border: 1px solid var(--border-dark);
+    border-radius: 8px;
+    padding: 9px 14px;
+    font-weight: 500;
+    font-size: 13px;
+  }
+
+  .tabs { gap: 30px; margin: 0 0 24px; border-bottom: 1px solid var(--border); }
+  .tab-btn {
+    padding: 18px 2px 14px;
+    color: var(--text-light);
+    border-bottom-width: 2px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color .18s ease, border-color .18s ease;
+  }
+  .tab-btn:hover { color: var(--primary); }
+  .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+  .calendar-container {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px;
+    box-shadow: var(--shadow);
+  }
+  .calendar-header { margin-bottom: 18px; }
+  .calendar-header h2 {
+    color: var(--primary-dark);
+    font-weight: 500;
+    font-size: clamp(20px, 2.4vw, 28px);
+  }
+  .calendar-header button {
+    background: transparent;
+    color: var(--primary);
+    border: 1px solid #a8757f;
+    border-radius: 7px;
+    padding: 9px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: background .18s ease, color .18s ease;
+  }
+  .calendar-header button:hover { background: var(--primary); color: #fff; }
+  .weekdays { gap: 0; margin: 0; border: 1px solid var(--border); border-bottom: 0; }
+  .weekday { color: var(--text-light); padding: 11px 0; font-size: 13px; font-weight: 500; }
+  .days { gap: 0; border-left: 1px solid var(--border); border-top: 1px solid var(--border); }
+  .day-cell {
+    min-height: 112px;
+    padding: 9px;
+    gap: 5px;
+    border: 0;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    border-radius: 0;
+    background: var(--surface);
+    transition: background .16s ease, box-shadow .16s ease;
+  }
+  .day-cell:hover { transform: none; background: #fbf2f3; box-shadow: inset 0 0 0 1px #a96b77; z-index: 1; }
+  .day-cell.empty { background: var(--surface-muted); border-color: var(--border); opacity: .55; }
+  .day-number { font-weight: 500; font-size: 14px; }
+  .day-chip { padding: 4px 6px; border-radius: 5px; font-size: 10.5px; font-weight: 500; }
+  .day-chip.chip-pending, .status-pending { background: var(--warning-soft); color: #6e4c19; }
+  .day-chip.chip-approved, .status-approved { background: var(--success-soft); color: #36573c; }
+
+  .modal-overlay { background: rgba(35, 29, 27, .56); padding: 20px; backdrop-filter: blur(2px); }
+  .modal-card {
+    background: var(--surface);
+    border: 1px solid var(--border-dark);
+    border-radius: 12px;
+    padding: 26px;
+    box-shadow: 0 24px 70px rgba(25, 18, 16, .22);
+  }
+  .modal-title { color: var(--primary-dark); font-size: 23px; font-weight: 500; letter-spacing: -.02em; }
+  .close-btn { width: 38px; height: 38px; border: 1px solid var(--border); border-radius: 50%; font-size: 18px; }
+  .close-btn:hover { border-color: var(--primary); color: var(--primary); }
+  .form-group { margin-bottom: 17px; }
+  .form-group label { margin-bottom: 7px; font-size: 13px; font-weight: 600; }
+  .form-group input, .form-group select, .form-group textarea {
+    padding: 11px 12px;
+    border: 1px solid var(--border-dark);
+    border-radius: 7px;
+    background: #fff;
+    color: var(--text);
+    font-size: 14px;
+    transition: border-color .18s ease, box-shadow .18s ease;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(113,23,42,.1);
+  }
+  .time-grid { gap: 8px; }
+  .time-btn { border: 1px solid var(--border); border-radius: 7px; padding: 11px; font-weight: 500; }
+  .time-btn:hover { transform: none; border-color: #a8757f; background: #fcf4f5; }
+  .time-btn.selected { background: var(--primary); border-color: var(--primary); color: white; }
+  .time-btn.status-waiting { background: var(--warning-soft); border-color: #dfbd7f; color: #60471f; }
+  .time-btn.status-paid { background: var(--success-soft); border-color: #98b09a; color: #36573c; }
+  .selected-times { background: var(--primary-soft); border-left: 3px solid var(--primary); border-radius: 4px; }
+  .file-upload-box { border: 1px dashed var(--border-dark); border-radius: 7px; padding: 22px; color: var(--text-light); }
+  .file-upload-box:hover { border-color: var(--primary); background: #fcf5f5; }
+  .btn { border-radius: 7px; padding: 11px 15px; font-family: 'Sarabun', sans-serif; font-size: 14px; font-weight: 600; }
+  .btn-primary { background: var(--primary); }
+  .btn-primary:hover { background: var(--primary-dark); transform: none; box-shadow: none; }
+  .btn-secondary { background: transparent; border: 1px solid var(--border-dark); }
+  .btn-secondary:hover { background: var(--surface-muted); }
+
+  .payment-container { padding: 10px 4px 18px; box-shadow: none; background: transparent; }
+  .thank-you { margin-bottom: 22px; }
+  .thank-you h1 { color: var(--success); font-size: 30px; font-weight: 500; }
+  .booking-details { background: var(--surface-muted); border: 1px solid var(--border); border-radius: 7px; }
+  #qrcode { background: #fff; border: 1px solid var(--border); border-radius: 8px; margin: 22px 0; }
+  .countdown { color: var(--primary); font-size: 15px; }
+  .countdown-timer { font-size: 42px; font-weight: 500; }
+  .admin-list, .settings-form {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+  }
+  .booking-item { padding: 18px 20px; }
+  .booking-date { color: var(--primary); font-weight: 500; }
+  .booking-status { border-radius: 5px; padding: 5px 9px; font-weight: 500; }
+  .btn-small { border-radius: 6px; }
+  .btn-approve { background: var(--success); }
+  .btn-reject { background: transparent; color: var(--danger); border: 1px solid #c98c8c; }
+  .settings-form { padding: 28px; }
+  .settings-form h3 { color: var(--primary-dark); font-weight: 500; }
+  .empty-state-icon { font-size: 0; }
+  .empty-state-icon::after { content: '—'; font-size: 34px; color: var(--border-dark); }
+
+  @media (max-width: 768px) {
+    .container { padding: 22px 14px 40px; }
+    .header { padding-bottom: 20px; }
+    .header-logo { width: 44px; height: 44px; }
+    .header-content h1 { font-size: 26px; }
+    .header-content p { font-size: 13px; }
+    .role-badge { padding: 7px 9px; }
+    .tabs { gap: 16px; overflow-x: auto; }
+    .tab-btn { white-space: nowrap; font-size: 13px; }
+    .calendar-container { padding: 12px; overflow: hidden; }
+    .calendar-header { gap: 7px; }
+    .calendar-header h2 { font-size: 17px; white-space: nowrap; }
+    .calendar-header button { padding: 7px 8px; font-size: 11px; white-space: nowrap; }
+    .weekday { font-size: 11px; padding: 8px 0; }
+    .day-cell { min-height: 78px; padding: 5px 4px; }
+    .day-number { font-size: 12px; }
+    .day-chip { font-size: 8.5px; padding: 3px; }
+    .modal-card { width: 100%; padding: 20px; }
+    .form-actions { flex-direction: column; }
+  }
+</style>
+<style>
+  /* Dedicated phone experience */
+  .mobile-booking, .mobile-bottom-nav { display: none; }
+
+  @media (min-width: 0px) {
+    body { padding-bottom: calc(78px + env(safe-area-inset-bottom)); background: #e9e2dc; }
+    .container { width: 100%; max-width: 430px; min-height: 100vh; padding: 18px 16px 28px; background: var(--paper); box-shadow: 0 0 34px rgba(57,42,37,.12); }
+    .header { padding: 0 0 17px; gap: 12px; }
+    .header-logo { width: 46px; height: 46px; flex: 0 0 auto; }
+    .header-logo svg { width: 25px; height: 25px; }
+    .header-content h1 { font-size: 24px; }
+    .header-content p { margin-top: 1px; font-size: 12px; }
+    .role-badge { margin-left: auto; min-width: 44px; min-height: 44px; padding: 9px; font-size: 11px; display: grid; place-items: center; }
+    .tabs, .calendar-container { display: none !important; }
+    .tab-content { padding-top: 0; }
+
+    .mobile-booking { display: block; }
+    .mobile-title-row { display: flex; align-items: center; justify-content: space-between; margin: 22px 0 16px; }
+    .mobile-title-row h2 { margin: 0; color: var(--primary-dark); font-family: 'Kanit', sans-serif; font-size: 25px; font-weight: 500; }
+    .mobile-month-row { display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; margin-bottom: 14px; }
+    .mobile-month-row h3 { margin: 0; text-align: center; font-family: 'Kanit', sans-serif; font-size: 19px; font-weight: 500; }
+    .mobile-round-btn { width: 44px; height: 44px; padding: 0; border: 1px solid #a8757f; border-radius: 50%; background: transparent; color: var(--primary); font-size: 22px; }
+
+    .mobile-date-rail { display: grid; grid-auto-flow: column; grid-auto-columns: 68px; gap: 9px; overflow-x: auto; padding: 2px 1px 10px; scrollbar-width: none; scroll-snap-type: x proximity; }
+    .mobile-date-rail::-webkit-scrollbar { display: none; }
+    .mobile-date-btn { min-height: 78px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); color: var(--text); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; scroll-snap-align: start; }
+    .mobile-date-btn .dow { color: var(--text-light); font-size: 12px; }
+    .mobile-date-btn .date { font-family: 'Kanit', sans-serif; font-size: 20px; font-weight: 500; }
+    .mobile-date-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+    .mobile-date-btn.active .dow { color: rgba(255,255,255,.78); }
+
+    .mobile-agenda { margin-top: 14px; }
+    .mobile-period { margin-top: 22px; }
+    .mobile-period:first-child { margin-top: 0; }
+    .mobile-period-title { display: flex; align-items: center; gap: 9px; margin: 0 0 9px; font-size: 14px; font-weight: 600; }
+    .period-mark { width: 10px; height: 10px; border: 1.5px solid #be8744; border-radius: 50%; box-shadow: 0 0 0 4px #f7e9cf; }
+    .mobile-time-list { overflow: hidden; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); }
+    .mobile-time-row { min-height: 56px; width: 100%; border: 0; border-bottom: 1px solid var(--border); background: transparent; padding: 0 13px; display: grid; grid-template-columns: 1fr auto 18px; align-items: center; gap: 9px; text-align: left; color: var(--text); }
+    .mobile-time-row:last-child { border-bottom: 0; }
+    .mobile-time-row:active { background: var(--primary-soft); }
+    .mobile-time { font-family: 'Kanit', sans-serif; font-size: 19px; font-weight: 400; }
+    .mobile-status { min-width: 78px; padding: 5px 8px; border: 1px solid #73937a; border-radius: 6px; color: #45684d; text-align: center; font-size: 12px; }
+    .mobile-status.pending { border-color: #d3a24f; background: var(--warning-soft); color: #74501d; }
+    .mobile-status.paid { border-color: transparent; background: var(--success-soft); color: #36573c; }
+    .mobile-status.closed { border-color: #b9b1aa; background: #eeeae5; color: #77706a; }
+    .mobile-time-row.owner-control { cursor: pointer; }
+    .mobile-time-row.owner-control .mobile-status { font-weight: 600; }
+    .mobile-time-row.owner-control:active { background: var(--primary-soft); }
+    .mobile-owner-hint { margin: 8px 0 14px; padding: 10px 12px; border-left: 3px solid var(--primary); background: var(--primary-soft); color: var(--primary-dark); font-size: 12px; }
+    .mobile-arrow { color: var(--text-light); font-size: 20px; }
+
+    .mobile-bottom-nav { position: fixed; z-index: 80; left: 50%; right: auto; bottom: 0; width: min(100%, 430px); height: calc(68px + env(safe-area-inset-bottom)); padding: 4px 10px env(safe-area-inset-bottom); display: grid; grid-template-columns: repeat(3, 1fr); transform: translateX(-50%); background: rgba(255,253,250,.97); border-top: 1px solid var(--border); box-shadow: 0 -10px 30px rgba(57,42,37,.06); }
+    .mobile-nav-btn { min-height: 58px; border: 0; background: transparent; color: var(--text-light); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 11px; }
+    .mobile-nav-btn svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+    .mobile-nav-btn.active { color: var(--primary); font-weight: 600; }
+
+    .modal-overlay { left: 50%; right: auto; width: min(100%, 430px); align-items: flex-end; padding: 0; transform: translateX(-50%); }
+    .modal-card { width: 100%; max-width: none !important; max-height: 91dvh; border-radius: 20px 20px 0 0; border-bottom: 0; padding: 16px 18px calc(22px + env(safe-area-inset-bottom)); animation: mobileSheetIn .24s ease-out; }
+    .modal-card::before { content: ''; display: block; width: 44px; height: 5px; margin: -5px auto 15px; border-radius: 99px; background: #d1ccc7; }
+    .modal-title { font-size: 21px; }
+    .time-grid { grid-template-columns: repeat(3, 1fr); }
+    .time-btn { min-height: 48px; }
+    .form-group input, .form-group select, .form-group textarea, .btn { min-height: 48px; font-size: 16px; }
+    .form-actions { position: sticky; bottom: -22px; margin: 18px -18px -22px; padding: 12px 18px calc(12px + env(safe-area-inset-bottom)); background: var(--surface); border-top: 1px solid var(--border); }
+    .payment-container { padding-bottom: 10px; }
+    @keyframes mobileSheetIn { from { transform: translateY(22px); opacity: .75; } to { transform: translateY(0); opacity: 1; } }
+    @media (prefers-reduced-motion: reduce) { .modal-card { animation: none; } }
+  }
+</style>
+<style id="demo-pastel-theme">
+  :root { --primary:#d7a5aa; --primary-dark:#74645f; --primary-soft:#fbefed; --success:#87957d; --success-soft:#edf1e8; --paper:#fffdf8; --surface:#fffefa; --surface-muted:#faf6f0; --border:#eadfd7; --border-dark:#d8c8bd; --text:#5e5651; --text-light:#948983; }
+  body { background:#eee8e2; }
+  .container { max-width:390px !important; padding:0 18px 30px !important; overflow:hidden; }
+  .header { min-height:232px; margin:0 -18px; padding:34px 20px 30px !important; display:flex; flex-direction:column; justify-content:center; gap:8px !important; text-align:center; background:#edf4f2 url('demo-header-stripes.png') center/cover no-repeat; border-bottom:1px solid rgba(213,190,180,.45); }
+  .header-logo,.role-badge { display:none !important; }
+  .brand-logo { width:112px; height:112px; margin:0 auto 4px; display:block; border-radius:50%; object-fit:cover; box-shadow:0 5px 18px rgba(123,105,97,.08); }
+  .header-content h1 { color:#756963 !important; font-family:'Kanit',sans-serif; font-size:28px !important; font-weight:400 !important; letter-spacing:.02em; }
+  .header-content p { margin-top:4px !important; color:#938985 !important; font-size:13px !important; }
+  .mobile-title-row { display:none !important; }
+  .mobile-month-row { margin:20px 0 13px !important; }
+  .mobile-month-row h3 { color:#6f6560; font-size:18px !important; font-weight:400 !important; }
+  .mobile-round-btn { width:38px !important; height:38px !important; border-color:#dfc3c2 !important; color:#b9878c !important; background:#fffaf7 !important; }
+  .mobile-date-rail { grid-auto-columns:58px !important; gap:7px !important; padding-bottom:8px !important; }
+  .mobile-date-btn { min-height:68px !important; border-color:#eadfd7 !important; border-radius:18px !important; background:#fffdfa !important; }
+  .mobile-date-btn .date { font-size:18px !important; }
+  .mobile-date-btn.active { background:#e2b6b8 !important; border-color:#e2b6b8 !important; box-shadow:0 5px 14px rgba(186,137,142,.18); }
+  .day-cell.open-booking-day,.mobile-date-btn.open-booking-day:not(.active) { border-color:#e8c765 !important; background:#fff7c9 !important; animation:openDayPulse 1.25s ease-in-out infinite; }
+  .mobile-date-btn.active.open-booking-day { border-color:#d59a9f !important; background:#e2b6b8 !important; color:#5f514c !important; animation:none; box-shadow:0 5px 14px rgba(186,137,142,.25); }
+  .mobile-date-btn.active .dow { color:#6f5d58 !important; }
+  .mobile-date-btn.active .date { color:#5f514c !important; }
+  .day-cell.full-booking-day,.mobile-date-btn.full-booking-day { border-color:#df9ba1 !important; background:#fbe3e5 !important; animation:none !important; box-shadow:none !important; }
+  .mobile-date-btn.full-booking-day .dow,.mobile-date-btn.full-booking-day .date,.full-day-label { color:#b44f5a !important; }
+  .day-cell.holiday-day,.mobile-date-btn.holiday-day { border-color:#c95f70 !important; background:#df929e !important; animation:none !important; box-shadow:none !important; }
+  .day-cell.holiday-day .day-number,.mobile-date-btn.holiday-day .dow,.mobile-date-btn.holiday-day .date,.holiday-day .full-day-label { color:#aa4350 !important; font-weight:700; }
+  .full-day-label { font-size:11px; font-weight:700; }
+  @keyframes openDayPulse { 0%,100% { box-shadow:0 0 0 0 rgba(224,183,55,.12); } 50% { box-shadow:0 0 0 5px rgba(224,183,55,.34),0 7px 18px rgba(178,137,25,.14); } }
+  @media (prefers-reduced-motion: reduce) { .day-cell.open-booking-day,.mobile-date-btn.open-booking-day { animation:none; box-shadow:0 0 0 3px rgba(224,183,55,.24); } }
+  .demo-location { margin:12px 0 10px; color:#80756f; font-size:12px; text-align:center; }
+  .demo-live-note { margin:14px 0 2px; padding:9px 7px; border:1px solid #eee2db; border-radius:12px; background:rgba(255,250,246,.88); color:#897d77; font-size:10px; line-height:1.2; text-align:center; white-space:nowrap; }
+  .sponsor-row { display:flex; justify-content:center; align-items:center; gap:8px; margin:8px 0 0; color:#a0938c; font-size:10px; }
+  .sponsor-row a { display:inline-flex; align-items:center; gap:5px; padding:4px 9px; border:1px solid #eee2db; border-radius:999px; background:#fff; color:#6f625d; font-weight:600; font-size:11px; text-decoration:none; }
+  .sponsor-row img { height:16px; width:auto; }
+  .waitlist-btn { margin-top:6px; width:100%; border:1px dashed #d8b9b4; background:#fffaf8; color:#8a6a70; border-radius:10px; padding:8px; font:500 12.5px 'Kanit',sans-serif; cursor:pointer; }
+  .waitlist-note { margin-top:6px; color:#6f8f73; font-size:12px; text-align:center; }
+  .stamp-card { margin:0 0 12px; padding:14px 16px; border-radius:16px; background:#71172a; color:#fff; }
+  .stamp-card b { font:600 15px 'Kanit',sans-serif; } .stamp-card small { display:block; opacity:.8; font-size:11.5px; margin:2px 0 10px; }
+  .stamp-dots { display:flex; gap:7px; flex-wrap:wrap; } .stamp-dots i { width:30px; height:30px; border-radius:50%; border:2px dashed rgba(255,255,255,.5); display:grid; place-items:center; font-style:normal; font-size:12px; }
+  .stamp-dots i.on { background:#fff; color:#71172a; border:0; } .stamp-dots i.free { border:2px solid #ffd54a; color:#ffd54a; font-size:10px; }
+  .partner-coupons { margin:0 0 12px; display:grid; gap:8px; } .partner-coupons a { display:flex; justify-content:space-between; gap:10px; padding:10px 14px; border:1px dashed #d8b9b4; border-radius:12px; background:#fffaf8; color:#6f625d; text-decoration:none; font-size:12.5px; }
+  .partner-coupons a b { color:#71172a; }
+  .live-booking { position:fixed; right:14px; bottom:calc(88px + env(safe-area-inset-bottom)); z-index:30; display:flex; align-items:center; gap:9px; height:48px; padding:4px; border:0; border-radius:999px; background:#3b2a2e; color:#fff; box-shadow:0 8px 22px rgba(0,0,0,.25); max-width:48px; overflow:hidden; transition:max-width .4s ease; font:inherit; cursor:pointer; }
+  .live-booking .av { flex:none; width:40px; height:40px; border-radius:50%; background:#ffd54a; color:#3b2a2e; display:grid; place-items:center; font:600 15px 'Kanit',sans-serif; animation:livePulse 1.2s ease-in-out infinite; }
+  @keyframes livePulse { 50% { box-shadow:0 0 0 7px rgba(255,213,74,0); background:#ffe680; } 0%,100% { box-shadow:0 0 0 0 rgba(255,213,74,.7); } }
+  .live-booking .info { white-space:nowrap; text-align:left; font-size:12px; line-height:1.25; opacity:0; transition:opacity .2s .15s; padding-right:12px; } .live-booking .info b { display:block; font-size:13px; }
+  .live-booking.open { max-width:340px; } .live-booking.open .info { opacity:1; }
+  @media (prefers-reduced-motion: reduce) { .live-booking, .live-booking .av { animation:none; transition:none; } }
+  .demo-live-note .bow { color:#d5a1a6; font-size:13px; vertical-align:-1px; margin-right:2px; }
+  .demo-slots-title { margin:0 0 9px; color:#756a64; font-family:'Kanit',sans-serif; font-size:15px; font-weight:400; }
+  .mobile-agenda { margin-top:0 !important; }
+  .mobile-period { margin-top:12px !important; }
+  .mobile-period-title { display:none !important; }
+  .mobile-time-list { border-color:#e8ddd5 !important; border-radius:16px !important; box-shadow:0 4px 16px rgba(98,76,67,.045); }
+  .mobile-time-row { min-height:74px !important; padding:0 16px !important; }
+  .mobile-time { color:#675d58; font-size:18px !important; }
+  .mobile-status { min-width:72px !important; border:0 !important; border-radius:999px !important; background:#dce8d7; color:#53684f; }
+  .mobile-status.pending { background:#fbf1df !important; color:#9a7b49 !important; }
+  .mobile-status.waiting { background:#fbf1df !important; color:#74501d !important; }
+  .mobile-status.waiting, .time-btn.status-waiting { animation: holdPulse 1.8s ease-in-out infinite; font-variant-numeric: tabular-nums; }
+  @keyframes holdPulse { 0%,100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(223,189,127,0); } 50% { transform: scale(1.04); box-shadow: 0 0 0 4px rgba(223,189,127,.35); } }
+  @media (prefers-reduced-motion: reduce) { .mobile-status.waiting, .time-btn.status-waiting { animation: none; } }
+  .mobile-status.paid { background:#f8e1e4 !important; color:#a84f5b !important; }
+  .mobile-status.closed { background:#f1eeeb !important; color:#9a918b !important; }
+  .mobile-arrow { color:#cfb9ad !important; }
+  .mobile-bottom-nav { width:min(100%,390px) !important; grid-template-columns:repeat(2,1fr) !important; background:rgba(255,253,249,.98) !important; border-color:#eadfd7 !important; }
+  .mobile-nav-btn.active { color:#bd878c !important; }
+  .modal-overlay { width:min(100%,390px) !important; }
+  .btn-primary { background:#c9979c !important; }
+  #admin { padding:20px 0 10px; }
+  .customer-list-title { margin:0 0 14px; color:#70645f; font-family:'Kanit',sans-serif; font-size:21px; font-weight:400; }
+  .customer-booking-list { display:grid; gap:11px; }
+  .customer-booking-card { padding:15px; border:1px solid #eadfd7; border-radius:16px; background:#fffefa; box-shadow:0 5px 18px rgba(98,76,67,.05); }
+  .customer-booking-top { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:11px; }
+  .customer-booking-date { color:#776a64; font-weight:600; font-size:14px; }
+  .customer-booking-time { margin-top:2px; color:#a06f75; font-family:'Kanit',sans-serif; font-size:18px; }
+  .customer-status { flex:0 0 auto; padding:6px 9px; border-radius:999px; font-size:11px; }
+  .customer-status.pending { background:#fbf1df; color:#98723c; }
+  .customer-status.approved { background:#edf1e8; color:#718069; }
+  .customer-status.lost { background:#f1eeeb; color:#918883; }
+  .customer-status.cancelled { background:#f1eeeb; color:#837772; }
+  .customer-booking-detail { display:grid; grid-template-columns:48px 1fr; gap:5px 8px; color:#756c67; font-size:12px; }
+  .customer-booking-detail span:nth-child(odd) { color:#a0958e; }
+  .customer-card-actions { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:12px; }
+  .customer-card-actions.single { grid-template-columns:1fr; }
+  .customer-pay-btn,.customer-cancel-btn { width:100%; min-height:42px; border-radius:11px; font-family:'Sarabun',sans-serif; font-weight:600; }
+  .customer-pay-btn { border:0; background:#d09b9f; color:white; }
+  .customer-cancel-btn { border:1px solid #d9b6b4; background:#fff; color:#9b6c70; }
+  .customer-reschedule-btn { width:100%; min-height:42px; border:1px solid #d8c3b8; border-radius:11px; background:#fffaf7; color:#8e6964; font-family:'Sarabun',sans-serif; font-weight:600; }
+  .customer-reschedule-btn:disabled { opacity:.55; cursor:not-allowed; }
+  .reschedule-note { margin-top:10px; padding:9px 11px; border-radius:10px; background:#fff6e8; color:#8a683a; font-size:12px; }
+  .reschedule-overlay { position:fixed; inset:0; z-index:1200; display:flex; align-items:flex-end; justify-content:center; padding:16px; background:rgba(61,51,48,.42); }
+  .reschedule-overlay[hidden] { display:none; }
+  .reschedule-sheet { width:min(100%,520px); max-height:calc(100dvh - 32px); overflow-y:auto; padding:22px; border-radius:24px 24px 16px 16px; background:#fffdfa; box-shadow:0 18px 45px rgba(45,35,32,.22); }
+  .reschedule-sheet h3 { margin:0 0 6px; color:#6c5e58; font-family:'Kanit',sans-serif; }
+  .reschedule-sheet p { margin:0 0 16px; color:#8c7e77; font-size:13px; }
+  .reschedule-sheet label { display:block; margin:12px 0 6px; color:#6d625d; font-weight:600; }
+  .reschedule-sheet input,.reschedule-sheet select { width:100%; min-height:46px; padding:10px 12px; border:1px solid #e2d4ca; border-radius:11px; background:#fff; font:inherit; }
+  .reschedule-policy { margin:16px 0; padding:14px 15px; border:1px solid #eadbd1; border-radius:14px; background:#fff8f5; color:#725f59; font-size:12px; line-height:1.65; }
+  .reschedule-policy strong { display:block; margin-bottom:5px; color:#8f5963; font-size:14px; }
+  .reschedule-policy ul { margin:0; padding-left:19px; }
+  .reschedule-policy p { margin:7px 0 0; color:#8f5963; font-size:12px; font-weight:600; }
+  .reschedule-payment-qr { margin:16px 0; padding:16px; border:1px solid #eadbd1; border-radius:16px; background:#fff; text-align:center; }
+  .reschedule-payment-qr strong { display:block; margin-bottom:10px; color:#725b55; }
+  .reschedule-payment-qr img { display:block; width:min(250px,100%); height:auto; margin:auto; }
+  .reschedule-payment-qr small { display:block; margin-top:10px; color:#9b4f5f; font-weight:700; }
+  .reschedule-actions { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:18px; }
+  .customer-slip-label { margin-top:8px; color:#718069; font-size:12px; font-weight:600; }
+  .customer-upload-time { display:grid; grid-template-columns:86px 1fr; gap:5px 8px; margin-top:10px; padding-top:10px; border-top:1px solid #eee4dd; color:#756c67; font-size:11px; }
+  .customer-upload-time span { color:#a0958e; }
+  .customer-attachment-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; margin-top:11px; }
+  .customer-attachment { min-width:0; }
+  .customer-attachment-label { margin:0 0 6px; color:#7d716b; font-size:11px; font-weight:600; }
+  .customer-attachment-thumb { display:grid; place-items:center; width:100%; min-height:92px; padding:0; overflow:hidden; border:1px solid #eadfd7; border-radius:11px; background:#faf6f2; color:#9b8e87; cursor:pointer; font:inherit; font-size:11px; }
+  .customer-attachment-thumb img { display:block; width:100%; height:110px; object-fit:cover; }
+  .customer-attachment-modal[hidden] { display:none !important; }
+  .customer-attachment-image { display:block; width:100%; max-height:62vh; object-fit:contain; border-radius:12px; background:#f4efeb; }
+  .customer-attachment-save { width:100%; min-height:44px; margin-top:12px; border:0; border-radius:11px; background:#c9979c; color:#fff; font:600 14px 'Sarabun',sans-serif; cursor:pointer; }
+  .customer-refund-note { margin-top:10px; padding:10px; border-radius:10px; background:#faf6f0; color:#7d706a; font-size:12px; line-height:1.55; }
+  .customer-policy { margin:0 0 14px; padding:10px 12px; border:1px solid #eadfd7; border-radius:12px; background:#fffaf6; color:#83756f; font-size:11px; line-height:1.55; }
+  .customer-empty { padding:50px 18px; text-align:center; color:#9a8f89; }
+  .sync-banner { margin:12px 20px 0; padding:10px 14px; border:1px solid #eadfd7; border-radius:13px; background:#fffaf6; color:#897d77; font-size:12px; text-align:center; }
+  .sync-banner.live { background:#eef3ea; color:#73806d; }
+  .sync-banner.reconnecting { background:#fbf1df; color:#98723c; }
+  .sync-banner.offline,.sync-banner.setup-required { background:#f8e9e8; color:#99666d; }
+  .line-link-card { margin:12px 20px 0; padding:13px 14px; border:1px solid #eadfd7; border-radius:14px; background:#fffaf6; color:#786d67; }
+  .line-link-card[hidden] { display:none; }
+  .line-link-card.ready { border-color:#cad9c2; background:#eff5eb; color:#5c7055; }
+  .line-link-card.required,.line-link-card.error { border-color:#ecd4b7; background:#fff6e8; color:#89663a; }
+  .line-link-row { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .line-link-title { margin:0; font-size:12px; font-weight:700; }
+  .line-link-detail { margin:5px 0 0; font-size:10px; line-height:1.45; }
+  .line-link-action { flex:0 0 auto; min-height:36px; padding:7px 11px; border:0; border-radius:999px; background:#58b957; color:#fff; font:600 11px 'Sarabun',sans-serif; cursor:pointer; }
+  .line-link-action:disabled { opacity:.55; cursor:wait; }
+  .setup-required-panel { margin:22px; padding:22px; border:1px solid #e8d6cd; border-radius:18px; background:#fffaf6; color:#776b65; text-align:center; }
+  .setup-required-panel h2 { margin:0 0 8px; color:#8e6b70; font:500 20px 'Kanit',sans-serif; }
+  .setup-required-panel p { margin:0; font-size:13px; line-height:1.65; }
+  #nl-badge-frame { display:none !important; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Header -->
+  <div class="header">
+    <img class="brand-logo" src="demo-profile-logo.jpg" alt="Demo Nails" width="150" height="150">
+    <div class="header-content">
+      <h1 id="shopName">จองคิว</h1>
+      <p data-shop="SHOP_AREA">ร้านตัวอย่าง กรุงเทพฯ</p>
+    </div>
+  </div>
+  <div id="syncBanner" class="sync-banner connecting" role="status">กำลังเชื่อมต่อคิว…</div>
+  <section id="lineLinkCard" class="line-link-card" aria-live="polite" hidden>
+    <div class="line-link-row"><p id="lineLinkTitle" class="line-link-title"></p><button id="lineLinkAction" class="line-link-action" type="button" onclick="connectLineAccount()"></button></div>
+    <p id="lineLinkDetail" class="line-link-detail"></p>
+  </section>
+  <div id="setupRequired" class="setup-required-panel" hidden>
+    <h2>ยังไม่ได้เชื่อมระบบออนไลน์</h2>
+    <p>ใส่ Project URL และ Publishable key ในไฟล์ <strong>demo-config.js</strong> แล้วเปิดหน้านี้ใหม่ค่ะ</p>
+  </div>
+  
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('booking')">ปฏิทิน</button>
+    <button class="tab-btn" onclick="switchTab('admin')">ยืนยันการจอง</button>
+  </div>
+  
+  <!-- Booking Tab -->
+  <div id="booking" class="tab-content active">
+    <section class="mobile-booking" aria-label="จองคิวทำเล็บ">
+      <div class="mobile-title-row"><h2>จองคิวทำเล็บ</h2></div>
+      <div class="mobile-month-row">
+        <button class="mobile-round-btn" onclick="prevMonth()" aria-label="เดือนก่อนหน้า">‹</button>
+        <h3 id="mobileMonthYear"></h3>
+        <button class="mobile-round-btn" onclick="nextMonth()" aria-label="เดือนถัดไป">›</button>
+      </div>
+      <div class="mobile-date-rail" id="mobileDateRail" data-mobile-date-rail></div>
+      <h3 class="demo-slots-title">เลือกช่วงเวลาที่ต้องการจอง (1 คน/คิว)</h3>
+      <div class="mobile-agenda" id="mobileAgenda" data-mobile-agenda></div>
+      <div class="demo-live-note"><span class="bow">♡</span>คิวอัปเดตแบบเรียลไทม์ ใครจองและชำระมัดจำก่อน ได้คิวก่อนค่ะ ♡</div>
+      <div id="sponsorRow" class="sponsor-row" hidden></div>
+    </section>
+    <div class="calendar-container">
+      <div class="calendar-header">
+        <button onclick="prevMonth()">← เดือนก่อนหน้า</button>
+        <h2 id="monthYear"></h2>
+        <button onclick="nextMonth()">เดือนถัดไป →</button>
+      </div>
+      
+      <div class="weekdays">
+        <div class="weekday">จ</div>
+        <div class="weekday">อ</div>
+        <div class="weekday">พ</div>
+        <div class="weekday">พฤ</div>
+        <div class="weekday">ศ</div>
+        <div class="weekday">ส</div>
+        <div class="weekday">อา</div>
+      </div>
+      
+      <div class="days" id="calendarDays"></div>
+    </div>
+  </div>
+  
+  <!-- Admin Tab -->
+  <div id="admin" class="tab-content">
+    <div id="adminContent"></div>
+  </div>
+</div>
+
+<nav class="mobile-bottom-nav" data-mobile-nav aria-label="เมนูหลัก">
+  <button class="mobile-nav-btn active" data-tab="booking" onclick="mobileSwitchTab('booking', this)"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg><span>จองคิว</span></button>
+  <button class="mobile-nav-btn" data-tab="admin" onclick="mobileSwitchTab('admin', this)"><svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/></svg><span>รายการจอง</span></button>
+</nav>
+
+<!-- Time Selection Modal -->
+<div id="timeModal" class="modal-overlay" style="display:none;" onclick="if(event.target===this) closeTimeModal()">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h2 class="modal-title" id="timeModalTitle">เลือกช่วงเวลา</h2>
+      <button class="close-btn" onclick="closeTimeModal()">✕</button>
+    </div>
+    
+    <div class="selected-times" id="selectedTimesDisplay" style="display:none;"></div>
+    <div class="promo-sellout-notice" data-promo-sellout-notice hidden>สิทธิ์รอบพิเศษครบ 3 คนแล้ว คิวนี้ยังจองแบบปกติได้ค่ะ</div>
+    
+    <div class="time-grid" id="timeGrid"></div>
+    
+    <div class="form-group">
+      <label>แนบรูปแบบเล็บที่ต้องการ</label>
+      <div class="file-upload-box" onclick="document.getElementById('imageInput').click()">
+        <div>เลือกภาพจากอุปกรณ์</div>
+        <input type="file" id="imageInput" accept="image/*" onchange="handleImageSelect(this)">
+        <div class="file-preview" id="filePreview"></div>
+      </div>
+    </div>
+    
+    <fieldset class="form-group" style="border:0;padding:0;" aria-required="true">
+      <legend style="font-weight:600;margin-bottom:8px;color:var(--text);font-size:13px;"><span data-shop="SERVICE_QUESTION">บริการล้างเล็บ</span> <span class="required-mark">(จำเป็น)</span></legend>
+      <div class="removal-options" id="serviceOptions">
+        <label class="removal-option"><input type="radio" name="removalService" value="gel" required aria-required="true"><span>ล้างเล็บเจล</span></label>
+        <label class="removal-option"><input type="radio" name="removalService" value="pvc" required aria-required="true"><span>ล้างพีวีซี</span></label>
+        <label class="removal-option"><input type="radio" name="removalService" value="none" required aria-required="true"><span>ไม่มี</span></label>
+      </div>
+    </fieldset>
+    
+    <div class="form-group">
+      <label>ชื่อ <span class="required-mark">(จำเป็น)</span></label>
+      <input type="text" id="customerName" placeholder="ชื่อของคุณ">
+    </div>
+    
+    <div class="form-group">
+      <label>เบอร์โทรศัพท์ <span class="required-mark">(จำเป็น)</span></label>
+      <input type="tel" id="customerPhone" placeholder="08xxxxxxxx" inputmode="numeric" autocomplete="tel" maxlength="12">
+    </div>
+    
+    <div class="form-actions">
+      <button class="btn btn-primary" id="submitBtn" onclick="submitBooking()" style="opacity: 0.5; cursor: not-allowed;" disabled>เลือกเวลาอย่างน้อย 1 ช่วง</button>
+      <button class="btn btn-secondary" onclick="closeTimeModal()">ยกเลิก</button>
+    </div>
+  </div>
+</div>
+
+<!-- Payment Modal -->
+<div id="paymentModal" class="modal-overlay" style="display:none;" onclick="if(event.target===this) closePaymentModal()">
+  <div class="modal-card">
+    <div class="modal-header" style="margin-bottom: 0;">
+      <button class="payment-back-btn" type="button" onclick="backToBookingForm()" aria-label="กลับไปแบบฟอร์มจอง">← กลับ</button>
+      <button class="close-btn" onclick="closePaymentModal()" aria-label="ปิดและกลับไปหน้าปฏิทิน">✕</button>
+    </div>
+    <div class="payment-container">
+      <div class="thank-you">
+        <h1>ขอบคุณค่ะ</h1>
+        <p>เราได้รับข้อมูลการจองของคุณแล้ว</p>
+      </div>
+      
+      <div class="payment-deposit-title">มัดจำจองคิว <span data-shop="DEPOSIT">150</span> บาท</div>
+      <div class="payment-deposit-note">ส่วนที่เหลือชำระเงินเมื่อทำเสร็จค่ะ</div>
+      
+      <div id="qrcode"></div>
+      
+      <div class="booking-details" id="bookingDetails"></div>
+      <div class="promo-sellout-notice" data-promo-sellout-notice hidden>สิทธิ์รอบพิเศษครบ 3 คนแล้ว คิวนี้ยังจองแบบปกติได้ค่ะ</div>
+
+      <section class="booking-policy" aria-labelledby="bookingPolicyTitle">
+        <h3 id="bookingPolicyTitle">เงื่อนไขการจองและการมาสาย</h3>
+        <ul>
+          <li>หากมาช้าเกิน 10 นาที ทางร้านขอสงวนสิทธิ์ยึดมัดจำ</li>
+          <li>หากมาช้าเกิน 15 นาที ทางร้านขออนุญาตยกเลิกคิวทันที</li>
+          <li>ยกเลิกก่อนเวลานัดอย่างน้อย 48 ชั่วโมง คืนเงินมัดจำ หากน้อยกว่า 48 ชั่วโมง ขอสงวนสิทธิ์ไม่คืนมัดจำ</li>
+          <li>ทางร้านงดรับผู้ติดตามภายในห้อง หากจำเป็นต้องพาผู้ติดตามมาด้วย สามารถรอบริเวณด้านล่างได้ค่ะ</li>
+        </ul>
+        <label class="booking-policy-accept"><input id="bookingPolicyAccepted" type="checkbox" onchange="updatePaymentConfirmationState()"><span>อ่านและยอมรับเงื่อนไขการจองแล้ว</span></label>
+      </section>
+      
+      <div class="countdown">
+        <div>กรุณาชำระเงินภายใน</div>
+        <div class="countdown-timer" id="timer">05:00</div>
+      </div>
+      
+      <div class="payment-slip-box">
+        <label for="paymentSlipInput" style="display:block;margin-bottom:8px;color:var(--text);font-weight:600;">แนบสลิปชำระเงิน</label>
+        <input type="file" id="paymentSlipInput" accept="image/jpeg,image/png,image/webp" onchange="handlePaymentSlipSelect(this)">
+        <div class="payment-slip-preview" id="paymentSlipPreview"></div>
+      </div>
+      <button id="confirmSlipButton" class="btn btn-primary" style="width:100%;margin-top:12px;" onclick="submitPaymentSlip()" disabled>แนบสลิปและยืนยันคิว</button>
+    </div>
+  </div>
+</div>
+
+<div id="customerAttachmentModal" class="modal-overlay customer-attachment-modal" hidden onclick="if(event.target===this) closeCustomerAttachment()">
+  <div class="modal-card" style="max-width:520px;">
+    <div class="modal-header">
+      <h2 id="customerAttachmentTitle" class="modal-title">รูปที่แนบมา</h2>
+      <button class="close-btn" type="button" onclick="closeCustomerAttachment()" aria-label="ปิด">✕</button>
+    </div>
+    <div id="customerAttachmentLoading" style="padding:28px 8px;text-align:center;color:var(--text-light);">กำลังโหลดรูป…</div>
+    <img id="customerAttachmentImage" class="customer-attachment-image" alt="รูปที่แนบมา" hidden>
+    <button id="saveCustomerAttachment" class="customer-attachment-save" type="button" onclick="saveCustomerAttachment()" hidden>บันทึกรูป</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.4/dist/umd/supabase.js"></script>
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<script src="demo-config.js?v=20261017"></script>
+<script src="demo-supabase.js?v=202610210729"></script>
+<script src="line-link-core.js?v=20260913-line-origin"></script>
+<script src="attachment-ui-core.js"></script>
+<script src="reschedule-core.js"></script>
+<script src="slot-status-core.js?v=20261017"></script>
+<script src="ui-sound-core.js"></script>
+<script>
+  let realtimeUnsubscribe = null;
+  let currentCustomerAttachment = null;
+
+  const customerSounds = UISoundCore.createController({
+    storage: null,
+    AudioContextClass: window.AudioContext || window.webkitAudioContext
+  });
+
+  function customerSoundAction(button) {
+    const label = String(button.textContent || '').trim();
+    if (button.dataset.sound) return button.dataset.sound;
+    if (button.matches('.promo-special-slot')) return 'heartbeat';
+    if (button.matches('.mobile-date-btn,.mobile-time-row,.time-btn')) return 'select';
+    if (button.type === 'submit' || /ยืนยัน|ส่งคำขอ|แนบสลิป|ชำระ/.test(label)) return 'success';
+    if (button.matches('.close-btn,.payment-back-btn,.customer-cancel-btn') || /ยกเลิก|ปิด|กลับ|ย้อน/.test(label)) return 'close';
+    return 'tap';
+  }
+
+  function handleCustomerButtonSound(event) {
+    const button = event.target.closest('button,[role="button"]');
+    if (!button || button.disabled) return;
+    customerSounds.play(customerSoundAction(button));
+  }
+
+  document.addEventListener('click', handleCustomerButtonSound);
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  var state = {
+    currentMonth: new Date(),
+    bookings: [],
+    reschedules: [],
+    rescheduleBookingId: null,
+    slotAvailability: {},
+    slotPaymentStatus: {},
+    slotHoldUntil: {},
+    holidays: new Set(),
+    userRole: 'customer',
+    currentPaymentIds: [],
+    currentPendingDraft: null,
+    selectedTimes: [],
+    uploadedImages: [],
+    designImageFile: null,
+    paymentSlipFile: null,
+    lineEnabled: LineLinkCore.isEnabled(window.DEMO_CONFIG || {}),
+    lineLoading: false,
+    lineFriend: false,
+    lineLinked: false,
+    lineAccessToken: '',
+    lineError: ''
+  };
+  
+  async function init() {
+    state.userRole = 'customer';
+    updateUI();
+    renderCalendar();
+    updateAdminPanel();
+    if (!window.DemoData || !DemoData.isConfigured()) {
+      setConnectionState('setup-required');
+      document.getElementById('setupRequired').hidden = false;
+      return;
+    }
+    try {
+      setConnectionState('connecting');
+      await DemoData.ensureCustomerSession();
+      await initLineLinking();
+      await loadShopExtras();
+      await refreshRealtimeData();
+      realtimeUnsubscribe = DemoData.subscribe('customer', refreshRealtimeData, handleRealtimeStatus);
+    } catch (error) {
+      console.error('Demo realtime setup failed', error?.code || 'REQUEST_FAILED');
+      setConnectionState('offline');
+    }
+  }
+
+  function renderLineLinking() {
+    const card = document.getElementById('lineLinkCard');
+    if (!state.lineEnabled) { card.hidden = true; return; }
+    card.hidden = false;
+    const view = LineLinkCore.presentation({
+      enabled:state.lineEnabled, loading:state.lineLoading,
+      friend:state.lineFriend, linked:state.lineLinked,
+    });
+    card.className = `line-link-card ${state.lineError ? 'error' : view.tone}`;
+    document.getElementById('lineLinkTitle').textContent = state.lineError || view.title;
+    const action = document.getElementById('lineLinkAction');
+    action.hidden = !view.action;
+    action.disabled = state.lineLoading;
+    action.textContent = view.action;
+    document.getElementById('lineLinkDetail').textContent = view.ready
+      ? 'ร้านจะส่งข้อความยืนยันคิวและแจ้งเตือนก่อนนัด 1 ชั่วโมงทาง LINE'
+      : 'จำเป็นต้องเป็นเพื่อน LINE OA ของร้าน เพื่อให้ระบบส่งข้อความถึงบัญชีที่จองได้ถูกต้อง';
+  }
+
+  async function verifyAndLinkLine() {
+    const friendship = await window.liff.getFriendship();
+    state.lineFriend = friendship?.friendFlag === true;
+    if (!state.lineFriend) { state.lineLinked = false; state.lineAccessToken = ''; return false; }
+    const idToken = window.liff.getIDToken();
+    const accessToken = window.liff.getAccessToken();
+    if (!idToken || !accessToken) throw new Error('ไม่สามารถยืนยันบัญชี LINE ได้ กรุณาเข้าสู่ระบบใหม่');
+    await DemoData.linkLineCustomer(idToken, accessToken);
+    state.lineLinked = true;
+    state.lineAccessToken = accessToken;
+    return true;
+  }
+
+  async function initLineLinking() {
+    renderLineLinking();
+    if (!state.lineEnabled) return;
+    state.lineLoading = true; state.lineError = ''; renderLineLinking();
+    try {
+      if (!window.liff) throw new Error('โหลดระบบ LINE ไม่สำเร็จ กรุณาเปิดหน้าใหม่');
+      await window.liff.init({ liffId:String(window.DEMO_CONFIG.LIFF_ID).trim() });
+      const login = LineLinkCore.initAction({
+        loggedIn:window.liff.isLoggedIn(),
+      });
+      if (login.type === 'continue') await verifyAndLinkLine();
+    } catch (error) {
+      state.lineError = error?.message || 'เชื่อม LINE ไม่สำเร็จ กรุณาลองใหม่';
+      state.lineLinked = false; state.lineAccessToken = '';
+    } finally {
+      state.lineLoading = false; renderLineLinking();
+    }
+  }
+
+  async function connectLineAccount() {
+    if (!state.lineEnabled || state.lineLoading) return;
+    state.lineLoading = true; state.lineError = ''; renderLineLinking();
+    const authorizeFriend = () => {
+      state.lineFriend = false; state.lineLinked = false; state.lineAccessToken = '';
+      window.liff.logout();
+      const action = LineLinkCore.loginAction({
+        loggedIn:false, currentUrl:window.location.href, webUrl:window.DEMO_CONFIG.BOOKING_URL,
+      });
+      if (action.type === 'navigate') window.location.assign(action.url);
+      else window.liff.login({ redirectUri:action.redirectUri });
+    };
+    try {
+      const login = LineLinkCore.loginAction({
+        liffId:window.DEMO_CONFIG.LIFF_ID,
+        loggedIn:window.liff.isLoggedIn(),
+        currentUrl:window.location.href,
+        webUrl:window.DEMO_CONFIG.BOOKING_URL,
+      });
+      if (login.type === 'navigate' || login.type === 'open-liff') {
+        window.location.assign(login.url);
+        return;
+      }
+      if (login.type === 'login') {
+        window.liff.login({ redirectUri:login.redirectUri });
+        return;
+      }
+      let friendship = await window.liff.getFriendship();
+      if (friendship?.friendFlag !== true && !window.liff.isInClient()) {
+        authorizeFriend();
+        return;
+      }
+      if (friendship?.friendFlag !== true && typeof window.liff.requestFriendship === 'function') {
+        await window.liff.requestFriendship();
+        friendship = await window.liff.getFriendship();
+      }
+      if (friendship?.friendFlag !== true) {
+        throw new Error('กรุณากดยืนยันเพิ่มเพื่อนหรือปลดบล็อกร้านใน LINE แล้วกดเชื่อมอีกครั้งค่ะ');
+      }
+      await verifyAndLinkLine();
+    } catch (error) {
+      if (error?.code === 'LINE_FRIEND_REQUIRED' && !window.liff.isInClient()) {
+        authorizeFriend();
+        return;
+      }
+      state.lineError = error?.message || 'เชื่อม LINE ไม่สำเร็จ กรุณาลองใหม่';
+      state.lineLinked = false; state.lineAccessToken = '';
+    } finally {
+      state.lineLoading = false; renderLineLinking();
+    }
+  }
+
+  function setConnectionState(status) {
+    const banner = document.getElementById('syncBanner');
+    if (!banner) return;
+    const copy = {
+      connecting:'กำลังเชื่อมต่อคิว…', live:'คิวอัปเดตแบบเรียลไทม์',
+      reconnecting:'สัญญาณขัดข้อง กำลังเชื่อมต่อใหม่…',
+      offline:'ไม่สามารถเชื่อมต่อได้ กรุณาลองใหม่',
+      'setup-required':'ต้องตั้งค่า Supabase ก่อนเปิดใช้งาน Realtime'
+    };
+    banner.className = `sync-banner ${status}`;
+    banner.textContent = copy[status] || copy.offline;
+  }
+
+  function handleRealtimeStatus(status) {
+    setConnectionState(status === 'SUBSCRIBED' ? 'live' : status === 'CHANNEL_ERROR' || status === 'TIMED_OUT' ? 'reconnecting' : 'offline');
+  }
+
+  async function refreshRealtimeData() {
+    const year = state.currentMonth.getFullYear();
+    const month = state.currentMonth.getMonth();
+    const from = `${year}-${String(month + 1).padStart(2,'0')}-01`;
+    const to = `${year}-${String(month + 1).padStart(2,'0')}-${String(new Date(year, month + 1, 0).getDate()).padStart(2,'0')}`;
+    const [slots, bookings, reschedules, holidayRows] = await Promise.all([DemoData.listSlots(from, to), DemoData.listMyBookings(), DemoData.listMyRescheduleRequests(), DemoData.listHolidays(from, to)]);
+    state.holidays = new Set(holidayRows.map(item => item.day));
+    state.slotAvailability = {};
+    state.slotPaymentStatus = {};
+    state.slotHoldUntil = {};
+    slots.forEach(slot => {
+      const key = slotKey(slot.slot_date, slot.start_time);
+      state.slotAvailability[key] = slot.is_open === true;
+      state.slotPaymentStatus[key] = slot.is_booked === true;
+      state.slotHoldUntil[key] = slot.hold_expires_at || null;
+    });
+    state.bookings = bookings.map(booking => ({
+      id:booking.id, date:booking.slot_date, time:booking.start_time,
+      name:booking.customer_name, phone:booking.customer_phone,
+      removalService:booking.removal_service, status:booking.status,
+      slipPath:booking.slip_path, slipUploadedAt:booking.slip_uploaded_at,
+      designImagePath:booking.design_image_path,
+      cancelledAt:booking.cancelled_at, cancelledByRole:booking.cancelled_by_role,
+      refundStatus:booking.refund_status,
+      createdAt:booking.created_at, expiresAt:booking.expires_at, paidAt:booking.paid_at, attendance:booking.attendance
+    }));
+    state.reschedules = reschedules;
+    renderCalendar();
+    updateAdminPanel();
+    setConnectionState('live');
+  }
+  
+  function updateUI() {
+    document.getElementById('shopName').textContent = 'จองคิว';
+    const roleBadge = document.getElementById('roleBadge');
+    if (roleBadge) roleBadge.textContent = state.userRole === 'owner' ? 'โหมดเจ้าของร้าน' : 'โหมดลูกค้า';
+    
+    const adminTab = document.querySelector('[onclick="switchTab(\'admin\')"]');
+    adminTab.style.display = state.userRole === 'owner' ? 'block' : 'none';
+    
+  }
+  
+  const PENDING_EXPIRY_MS = 5 * 60 * 1000; // ช่องรอชำระ (สีเหลือง) จะหายไปเองถ้าไม่ยืนยันภายใน 5 นาที
+  const MAX_CHIPS_PER_DAY = 3;
+  const SHOP = window.DEMO_CONFIG || {};
+  const BOOKING_SLOTS = SHOP.SLOTS || [];
+
+  function bookingSlotsForDate(dateStr) {
+    const weekday = new Date(`${dateStr}T12:00:00`).getDay();
+    return BOOKING_SLOTS.filter(slot => !slot.days || slot.days.includes(weekday));
+  }
+
+  function bookingSlotLabel(startTime) {
+    const slot = BOOKING_SLOTS.find(item => item.start === startTime);
+    return slot ? `${slot.start}–${slot.end}` : startTime;
+  }
+
+  function slotKey(dateStr, timeStr) {
+    return `${dateStr}|${timeStr}`;
+  }
+
+  function bookingDraftSignature({ date, times, name, phone, removalService }) {
+    return JSON.stringify([date, [...times].sort(), name, phone, removalService]);
+  }
+
+  function pendingBookingIsReusable(booking) {
+    if (!booking || booking.status !== 'pending') return false;
+    const explicitExpiry = new Date(booking.expiresAt).getTime();
+    const createdExpiry = new Date(booking.createdAt).getTime() + PENDING_EXPIRY_MS;
+    const expiry = Number.isFinite(explicitExpiry) ? explicitExpiry : createdExpiry;
+    return !Number.isFinite(expiry) || expiry > Date.now();
+  }
+
+  function setPendingDraft(signature, bookings) {
+    state.currentPendingDraft = { signature, bookings: [...bookings] };
+    state.currentPaymentIds = bookings.map(booking => booking.id);
+  }
+
+  function pendingDraftBookings(draft) {
+    if (!draft?.bookings?.length) return [];
+    const stateById = new Map(state.bookings.map(booking => [String(booking.id), booking]));
+    return draft.bookings.map(localBooking => {
+      const authoritative = stateById.get(String(localBooking.id));
+      if (authoritative && authoritative.status !== 'pending') return null;
+      const candidate = authoritative || localBooking;
+      return pendingBookingIsReusable(candidate) ? candidate : null;
+    }).filter(Boolean);
+  }
+
+  function clearPendingDraft() {
+    state.currentPendingDraft = null;
+    state.currentPaymentIds = [];
+  }
+
+  function isSlotOpen(dateStr, timeStr) {
+    return state.slotAvailability[slotKey(dateStr, timeStr)] === true;
+  }
+
+  function isSlotPaid(dateStr, timeStr) {
+    return state.slotPaymentStatus[slotKey(dateStr, timeStr)] === true;
+  }
+
+  function isSlotHeld(dateStr, timeStr) {
+    const expiry = new Date(state.slotHoldUntil[slotKey(dateStr, timeStr)]).getTime();
+    return Number.isFinite(expiry) && expiry > Date.now();
+  }
+
+  function setSlotAvailability(dateStr, timeStr, isOpen) {
+    const occupied = state.bookings.some(b => b.date === dateStr && b.time === timeStr && b.status === 'approved');
+    if (occupied && !isOpen) return false;
+    state.slotAvailability[slotKey(dateStr, timeStr)] = Boolean(isOpen);
+    renderCalendar();
+    return true;
+  }
+
+  function canBookSlot(dateStr, timeStr) {
+    if (state.holidays.has(dateStr)) return false;
+    const occupied = state.bookings.some(b => b.date === dateStr && b.time === timeStr && b.status === 'approved');
+    return isSlotOpen(dateStr, timeStr) && !isSlotPaid(dateStr, timeStr) && !isSlotHeld(dateStr, timeStr) && !occupied;
+  }
+
+  function toggleSlotAvailability(dateStr, timeStr) {
+    if (state.userRole !== 'owner') return;
+    const changed = setSlotAvailability(dateStr, timeStr, !isSlotOpen(dateStr, timeStr));
+    if (!changed) alert('รอบที่มีลูกค้าจองอยู่ไม่สามารถปิดรับได้');
+  }
+
+  function nextHourLabel(timeStr) {
+    const h = (parseInt(timeStr.split(':')[0], 10) + 1) % 24;
+    return String(h).padStart(2, '0') + ':00';
+  }
+
+  // ลบรายการ "รอชำระ" ที่เลยเวลา 5 นาทีไปแล้วออกจากระบบอัตโนมัติ (เหมือนลูกค้าปล่อยเวลานับถอยหลังหมด)
+  function purgeExpiredPendingBookings() {
+    const now = Date.now();
+    const before = state.bookings.length;
+    state.bookings = state.bookings.filter(b => {
+      if (b.status !== 'pending') return true;
+      const created = new Date(b.createdAt).getTime();
+      if (isNaN(created)) return true;
+      return (now - created) < PENDING_EXPIRY_MS;
+    });
+    if (state.currentPendingDraft) {
+      const reusableDraftBookings = pendingDraftBookings(state.currentPendingDraft);
+      if (reusableDraftBookings.length) setPendingDraft(state.currentPendingDraft.signature, reusableDraftBookings);
+      else clearPendingDraft();
+    }
+    if (state.bookings.length !== before) {
+      return true;
+    }
+    return false;
+  }
+
+  function renderCalendar() {
+    purgeExpiredPendingBookings();
+
+    const year = state.currentMonth.getFullYear();
+    const month = state.currentMonth.getMonth();
+    
+    const monthNames = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
+                       'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
+    
+    document.getElementById('monthYear').textContent = `${monthNames[month]} ${year + 543}`;
+    
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDayOfWeek = firstDay.getDay();
+    
+    let html = '';
+    
+    for (let i = 0; i < startingDayOfWeek; i++) {
+      html += '<div class="day-cell empty"></div>';
+    }
+    
+    for (let day = 1; day <= daysInMonth; day++) {
+      const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+      const hasOpenSlots = hasOpenBookingSlot(dateStr);
+      const isFull = isFullyBookedDay(dateStr);
+      const holiday = state.holidays.has(dateStr);
+      const dayBookings = state.bookings
+        .filter(b => b.date === dateStr && b.status === 'approved')
+        .sort((a, b) => a.time.localeCompare(b.time));
+      
+      const visible = dayBookings.slice(0, MAX_CHIPS_PER_DAY);
+      const extraCount = dayBookings.length - visible.length;
+      
+      const chipsHtml = visible.map(b => {
+        const isPaid = b.status === 'approved';
+        const chipClass = isPaid ? 'chip-approved' : 'chip-pending';
+        const label = isPaid
+          ? `✓ ${esc(b.name)} จองแล้ว`
+          : `${b.time}-${nextHourLabel(b.time)} ${esc(b.name)} รอจอง`;
+        return `<div class="day-chip ${chipClass}" title="${esc(label)}">${label}</div>`;
+      }).join('');
+      
+      const moreHtml = extraCount > 0 ? `<div class="day-chip-more">+${extraCount} เพิ่มเติม</div>` : '';
+      
+      html += `
+        <div class="day-cell${holiday ? ' holiday-day' : hasOpenSlots ? ' open-booking-day' : ''}${isFull && !holiday ? ' full-booking-day' : ''}" onclick="openTimeModal('${dateStr}')">
+          <div class="day-number">${day}</div>
+          ${holiday ? '<span class="full-day-label">หยุด</span>' : isFull ? '<span class="full-day-label">เต็ม</span>' : ''}
+          ${chipsHtml}
+          ${moreHtml}
+        </div>
+      `;
+    }
+    
+    const totalCells = Math.ceil((startingDayOfWeek + daysInMonth) / 7) * 7;
+    for (let i = startingDayOfWeek + daysInMonth; i < totalCells; i++) {
+      html += '<div class="day-cell empty"></div>';
+    }
+    
+    document.getElementById('calendarDays').innerHTML = html;
+    renderMobileBooking(year, month, monthNames, daysInMonth);
+  }
+
+  function hasOpenBookingSlot(dateStr) {
+    return bookingSlotsForDate(dateStr).some(slot=>isSlotOpen(dateStr,slot.start)&&!isSlotPaid(dateStr,slot.start)&&!isSlotHeld(dateStr,slot.start));
+  }
+
+  function isFullyBookedDay(dateStr) {
+    return SlotStatusCore.summarizeDay(bookingSlotsForDate(dateStr).map(slot=>({
+      isOpen:isSlotOpen(dateStr,slot.start),
+      isBooked:isSlotPaid(dateStr,slot.start),
+      isHeld:isSlotHeld(dateStr,slot.start),
+    }))).isFull;
+  }
+
+  function renderMobileBooking(year, month, monthNames, daysInMonth) {
+    const monthLabel = document.getElementById('mobileMonthYear');
+    const rail = document.getElementById('mobileDateRail');
+    const agenda = document.getElementById('mobileAgenda');
+    if (!monthLabel || !rail || !agenda) return;
+
+    monthLabel.textContent = `${monthNames[month]} ${year + 543}`;
+    const today = new Date();
+    const defaultDay = today.getFullYear() === year && today.getMonth() === month ? today.getDate() : 1;
+    if (!state.mobileSelectedDate || !state.mobileSelectedDate.startsWith(`${year}-${String(month + 1).padStart(2, '0')}-`)) {
+      state.mobileSelectedDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(defaultDay).padStart(2, '0')}`;
+    }
+
+    const weekdays = ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'];
+    rail.innerHTML = Array.from({ length: daysInMonth }, (_, index) => {
+      const day = index + 1;
+      const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+      const isActive = dateStr === state.mobileSelectedDate;
+      const hasOpenSlots = hasOpenBookingSlot(dateStr);
+      const isFull = isFullyBookedDay(dateStr);
+      const holiday = state.holidays.has(dateStr);
+      const date = new Date(year, month, day);
+      return `<button type="button" class="mobile-date-btn${isActive ? ' active' : ''}${holiday ? ' holiday-day' : hasOpenSlots ? ' open-booking-day' : ''}${isFull && !holiday ? ' full-booking-day' : ''}" onclick="selectMobileDate('${dateStr}')"${isActive ? ' aria-current="date"' : ''}><span class="dow">${weekdays[date.getDay()]}</span><span class="date">${day}</span>${holiday ? '<span class="full-day-label">หยุด</span>' : isFull ? '<span class="full-day-label">เต็ม</span>' : `<span class="dow">${monthNames[month].slice(0, 3)}</span>`}</button>`;
+    }).join('');
+
+    const selected = rail.querySelector('.active');
+    if (selected) requestAnimationFrame(() => selected.scrollIntoView({ inline: 'center', block: 'nearest' }));
+    renderMobileAgenda();
+  }
+
+  function selectMobileDate(dateStr) {
+    state.mobileSelectedDate = dateStr;
+    renderCalendar();
+  }
+
+  function renderMobileAgenda() {
+    const agenda = document.getElementById('mobileAgenda');
+    if (!agenda || !state.mobileSelectedDate) return;
+    if (state.holidays.has(state.mobileSelectedDate)) { agenda.innerHTML='<p class="mobile-owner-hint">วันนี้ร้านหยุด ไม่เปิดรับจองค่ะ</p>'; return; }
+    const ownerHint = state.rescheduleBookingId
+      ? '<div class="mobile-owner-hint">กำลังเลือกวันและรอบใหม่สำหรับเลื่อนคิว · แตะรอบที่ขึ้นว่า “ว่าง”</div>'
+      : state.userRole === 'owner'
+      ? '<div class="mobile-owner-hint">แตะรอบว่างเพื่อสลับสถานะ เปิดรับ / ปิดรับ</div>'
+      : '';
+    agenda.innerHTML = bookingSlotsForDate(state.mobileSelectedDate).map(slot => {
+        const time = slot.start;
+        const existing = state.bookings.find(b => b.date === state.mobileSelectedDate && b.time === time && b.status === 'approved');
+        const isOpen = isSlotOpen(state.mobileSelectedDate, time);
+        const publicPaid = isSlotPaid(state.mobileSelectedDate, time);
+        const held = isSlotHeld(state.mobileSelectedDate, time);
+        const holdUntil = state.slotHoldUntil[slotKey(state.mobileSelectedDate, time)];
+        const presentation = SlotStatusCore.forCustomer({ isOpen, isBooked:publicPaid, isHeld:held, holdUntil, ownApproved:Boolean(existing) });
+        const isOwnerControl = state.userRole === 'owner' && !existing;
+        const status = state.userRole === 'owner'
+          ? (existing || publicPaid ? 'ชำระแล้ว' : (isOpen ? 'เปิดรับ' : 'ปิดรับ'))
+          : presentation.label;
+        const statusClass = ` ${presentation.className}`;
+        const action = existing
+          ? 'disabled'
+          : isOwnerControl
+            ? `onclick="toggleSlotAvailability('${state.mobileSelectedDate}', '${time}')"`
+            : presentation.bookable
+              ? `onclick="openMobileTime('${state.mobileSelectedDate}', '${time}')"`
+              : 'disabled';
+        const row = `<button type="button" data-promo-slot-date="${state.mobileSelectedDate}" data-promo-slot-time="${time}" class="mobile-time-row${isOwnerControl ? ' owner-control' : ''}" ${action}><span class="mobile-time">${slot.start}–${slot.end}</span><span class="mobile-status${statusClass}"${held && !existing && !publicPaid ? ` data-hold-until="${holdUntil}"` : ''}>${status}</span><span class="mobile-arrow">${existing || publicPaid || !presentation.bookable ? '' : '›'}</span></button>`;
+        const waitKey = `${state.mobileSelectedDate}_${time}`;
+        const waitlist = publicPaid && !existing && state.userRole !== 'owner'
+          ? (state.waitlist?.includes(waitKey)
+            ? '<div class="waitlist-note">✓ จะแจ้งทาง LINE ถ้ารอบนี้ว่าง</div>'
+            : `<button type="button" class="waitlist-btn" onclick="joinWaitlist('${state.mobileSelectedDate}','${time}',this)">แจ้งเตือนฉันถ้ารอบนี้ว่าง</button>`)
+          : '';
+      return `<section class="mobile-period"><h3 class="mobile-period-title"><span class="period-mark"></span>${slot.name}</h3><div class="mobile-time-list">${row}${waitlist}</div></section>`;
+    }).join('');
+    agenda.innerHTML = ownerHint + agenda.innerHTML;
+    window.PromotionUI?.decorateSlots();
+  }
+
+  function openMobileTime(dateStr, timeStr) {
+    if (!canBookSlot(dateStr, timeStr)) {
+      alert('รอบนี้ปิดรับหรือมีลูกค้าจองแล้ว');
+      renderMobileAgenda();
+      return;
+    }
+    if (state.rescheduleBookingId) {
+      showReschedulePaymentForSlot(dateStr,timeStr);
+      return;
+    }
+    openTimeModal(dateStr);
+    document.getElementById('timeModal').classList.add('mobile-quick');
+    document.getElementById('timeModalTitle').textContent = 'เลือกเวลาที่สะดวก';
+    const buttons = Array.from(document.querySelectorAll('#timeGrid .time-btn'));
+    const button = buttons.find(btn => btn.dataset.time === timeStr);
+    if (button && !button.disabled) toggleTimeSelection(timeStr, button);
+  }
+  
+  // เช็คทุก 30 วิ ว่ามีรายการรอชำระที่หมดเวลา 5 นาทีหรือยัง ถ้ามีให้รีเฟรชปฏิทิน/หน้าแอดมินอัตโนมัติ
+  setInterval(() => {
+    if (purgeExpiredPendingBookings()) {
+      renderCalendar();
+      updateAdminPanel();
+    }
+  }, 30000);
+
+  // อัปเดตป้าย "กำลังชำระเงิน" ทันทีเมื่อครบ 5 นาที โดยไม่ต้องรีเฟรชหน้า
+  let activeHoldSignature = '';
+  setInterval(() => {
+    const now = Date.now();
+    const signature = Object.entries(state.slotHoldUntil)
+      .filter(([, expiresAt]) => new Date(expiresAt).getTime() > now)
+      .map(([key]) => key)
+      .sort()
+      .join('|');
+    if (signature !== activeHoldSignature) {
+      activeHoldSignature = signature;
+      renderCalendar();
+    }
+    document.querySelectorAll('[data-hold-until]').forEach(el => {
+      el.textContent = SlotStatusCore.forCustomer({ isHeld:true, holdUntil:el.dataset.holdUntil }).label;
+    });
+  }, 1000);
+
+  setInterval(() => {
+    const listTab = document.getElementById('admin');
+    if (listTab && listTab.classList.contains('active')) {
+      AttachmentUiCore.refreshPendingStatuses(document.getElementById('adminContent'), state.bookings, pendingRemainingLabel);
+    }
+  }, 1000);
+  
+  async function prevMonth() {
+    state.currentMonth.setMonth(state.currentMonth.getMonth() - 1);
+    if(window.DemoData&&DemoData.isConfigured()) {
+      setConnectionState('connecting');
+      await refreshRealtimeData().catch(()=>setConnectionState('offline'));
+    } else renderCalendar();
+  }
+  
+  async function nextMonth() {
+    state.currentMonth.setMonth(state.currentMonth.getMonth() + 1);
+    if(window.DemoData&&DemoData.isConfigured()) {
+      setConnectionState('connecting');
+      await refreshRealtimeData().catch(()=>setConnectionState('offline'));
+    } else renderCalendar();
+  }
+  
+  function openTimeModal(dateStr) {
+    if (state.holidays.has(dateStr)) { alert('วันนี้ร้านหยุด ไม่เปิดรับจองค่ะ'); return; }
+    const date = new Date(dateStr + 'T00:00:00');
+    const dateText = date.toLocaleDateString('th-TH', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    document.getElementById('timeModalTitle').textContent = `เลือกช่วงเวลา - ${dateText}`;
+    
+    state.selectedTimes = [];
+    state.uploadedImages = [];
+    state.designImageFile = null;
+    resetSelectedTimesUI();
+    document.getElementById('customerName').value = '';
+    document.getElementById('customerPhone').value = '';
+    document.querySelectorAll('input[name="removalService"]').forEach(input => { input.checked = false; });
+    document.getElementById('filePreview').innerHTML = '';
+    
+    const timeGridContainer = document.getElementById('timeGrid');
+    timeGridContainer.innerHTML = '';
+    
+    bookingSlotsForDate(dateStr).forEach(slot => {
+      const timeStr = slot.start;
+      const existing = state.bookings.find(b => b.date === dateStr && b.time === timeStr && b.status === 'approved');
+      const publicPaid = isSlotPaid(dateStr, timeStr);
+      const held = isSlotHeld(dateStr, timeStr);
+      
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.dataset.time = timeStr;
+      
+      if (existing || publicPaid || held) {
+        const isPaid = Boolean(existing) || publicPaid;
+        btn.className = 'time-btn booked ' + (isPaid ? 'status-paid' : 'status-waiting');
+        btn.disabled = true;
+        btn.innerHTML = `
+          <div class="time-btn-time">${slot.start}–${slot.end}</div>
+          ${existing ? `<div class="time-btn-name">${esc(existing.name)}</div>` : ''}
+          ${existing || publicPaid ? `<div class="time-btn-status">${existing ? '✓ ชำระแล้ว' : 'เต็ม'}</div>` : `<div class="time-btn-status" data-hold-until="${state.slotHoldUntil[slotKey(dateStr, timeStr)]}">${SlotStatusCore.forCustomer({ isHeld:true, holdUntil:state.slotHoldUntil[slotKey(dateStr, timeStr)] }).label}</div>`}
+        `;
+      } else {
+        btn.className = 'time-btn';
+        btn.innerHTML = `<div class="time-btn-time">${slot.start}–${slot.end}</div>`;
+        btn.onclick = () => toggleTimeSelection(timeStr, btn);
+      }
+      
+      timeGridContainer.appendChild(btn);
+    });
+    
+    document.getElementById('timeModal').style.display = 'flex';
+    document.getElementById('timeModal').dataset.selectedDate = dateStr;
+  }
+  
+  function toggleTimeSelection(timeStr, btn) {
+    const index = state.selectedTimes.indexOf(timeStr);
+    if (index > -1) {
+      state.selectedTimes.splice(index, 1);
+      btn.classList.remove('selected');
+    } else {
+      // one slot per booking: each slot gets its own deposit and slip
+      document.querySelectorAll('#timeGrid .time-btn.selected').forEach(other => other.classList.remove('selected'));
+      state.selectedTimes = [timeStr];
+      btn.classList.add('selected');
+    }
+    window.PromotionUI?.trackSlots(document.getElementById('timeModal').dataset.selectedDate,[...state.selectedTimes]);
+    trackMyPresence();
+    updateSelectedTimesDisplay();
+  }
+  
+  function updateSelectedTimesDisplay() {
+    const display = document.getElementById('selectedTimesDisplay');
+    const btn = document.getElementById('submitBtn');
+    
+    if (state.selectedTimes.length > 0) {
+      display.style.display = 'block';
+      display.innerHTML = `<strong>✓ เลือกแล้ว:</strong> ${state.selectedTimes.map(bookingSlotLabel).join(', ')}`;
+      btn.disabled = false;
+      btn.style.opacity = '1';
+      btn.style.cursor = 'pointer';
+      btn.textContent = 'ยืนยันการจอง';
+    } else {
+      resetSelectedTimesUI();
+    }
+  }
+
+  function resetSelectedTimesUI() {
+    document.getElementById('selectedTimesDisplay').style.display = 'none';
+    document.getElementById('selectedTimesDisplay').innerHTML = '';
+    const submitButton = document.getElementById('submitBtn');
+    submitButton.disabled = true;
+    submitButton.style.opacity = '0.5';
+    submitButton.style.cursor = 'not-allowed';
+    submitButton.textContent = 'เลือกเวลาอย่างน้อย 1 ช่วง';
+  }
+  
+  function handleImageSelect(input) {
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      const allowedTypes = ['image/jpeg','image/png','image/webp'];
+      if (!allowedTypes.includes(file.type) || file.size > 5 * 1024 * 1024) {
+        state.designImageFile = null;
+        input.value = '';
+        alert('กรุณาแนบรูปแบบเล็บ JPEG, PNG หรือ WebP ขนาดไม่เกิน 5MB');
+        return;
+      }
+      state.designImageFile = file;
+      const reader = new FileReader();
+      
+      reader.onload = (e) => {
+        state.uploadedImages.push(e.target.result);
+        const preview = document.getElementById('filePreview');
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        img.className = 'preview-img';
+        preview.appendChild(img);
+      };
+      
+      reader.readAsDataURL(file);
+    }
+    input.value = '';
+  }
+  
+  function clearTemporaryBookingFlow() {
+    window.PromotionUI?.clearTrackedSlot();
+    clearPendingDraft();
+    document.getElementById('timeModal').style.display = 'none';
+    document.getElementById('timeModal').classList.remove('mobile-quick');
+    state.selectedTimes = [];
+    state.uploadedImages = [];
+    state.designImageFile = null;
+    resetSelectedTimesUI();
+    state.paymentSlipFile = null;
+    document.getElementById('customerName').value = '';
+    document.getElementById('customerPhone').value = '';
+    document.querySelectorAll('input[name="removalService"]').forEach(input => { input.checked = false; });
+    document.getElementById('filePreview').innerHTML = '';
+    document.getElementById('paymentSlipInput').value = '';
+    document.getElementById('paymentSlipPreview').innerHTML = '';
+    document.getElementById('bookingPolicyAccepted').checked = false;
+    updatePaymentConfirmationState();
+  }
+
+  function setPromoSelloutNotice(visible) {
+    document.querySelectorAll('[data-promo-sellout-notice]').forEach(notice => { notice.hidden = !visible; });
+    if (visible) {
+      const submit = document.getElementById('submitBtn');
+      if (submit && !submit.disabled) submit.textContent = 'ยืนยันการจองแบบปกติ';
+    }
+  }
+  document.addEventListener('demo:promo-availability', event => setPromoSelloutNotice(Boolean(event.detail?.soldOut)));
+  document.addEventListener('demo:promo-sold-out', () => {
+    setPromoSelloutNotice(true);
+    alert('สิทธิ์รอบพิเศษครบ 3 คนแล้วค่ะ คิวนี้ยังสามารถจองแบบปกติได้');
+  });
+
+  function closeTimeModal() {
+    presence?.track(null);
+    clearTemporaryBookingFlow();
+  }
+  
+  async function submitBooking() {
+    const dateStr = document.getElementById('timeModal').dataset.selectedDate;
+    const name = document.getElementById('customerName').value.trim();
+    const phone = document.getElementById('customerPhone').value.trim();
+    const removalService = document.querySelector('input[name="removalService"]:checked')?.value;
+
+    if (!LineLinkCore.canBook({ enabled:state.lineEnabled, linked:state.lineLinked })) {
+      alert('กรุณาเพิ่มเพื่อนและเชื่อม LINE ร้านก่อนจองคิว');
+      document.getElementById('lineLinkCard').scrollIntoView({ behavior:'smooth', block:'center' });
+      return;
+    }
+    
+    if (!name || !phone) {
+      alert('กรุณากรอกชื่อและเบอร์โทรศัพท์');
+      return;
+    }
+
+    if (!removalService) {
+      alert('กรุณาเลือกบริการล้างเล็บ');
+      return;
+    }
+
+    if (!DemoData.isValidPhone(phone)) {
+      alert('กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง 9–10 หลัก');
+      document.getElementById('customerPhone').focus();
+      return;
+    }
+
+    if (!state.selectedTimes.length || state.selectedTimes.some(time => !canBookSlot(dateStr, time))) {
+      alert('รอบที่เลือกปิดรับหรือมีลูกค้าจองแล้ว กรุณาเลือกรอบใหม่');
+      renderCalendar();
+      return;
+    }
+    
+    const selectedTimes = [...state.selectedTimes];
+    let selectedBenefit;
+    try {selectedBenefit=window.PromotionUI?.benefit()||null;}catch(error){alert(error.message);return;}
+    if(selectedBenefit&&selectedTimes.length!==1){alert('โปรใช้ได้ครั้งละ 1 คิว กรุณาเลือกเวลาเดียว');return;}
+    const draftSignature = bookingDraftSignature({ date:dateStr, times:selectedTimes, name, phone, removalService }) + JSON.stringify(selectedBenefit);
+    let newBookings = [];
+    if (state.currentPendingDraft?.signature === draftSignature) {
+      newBookings = pendingDraftBookings(state.currentPendingDraft);
+      setPendingDraft(draftSignature, newBookings);
+    } else {
+      clearPendingDraft();
+    }
+    try {
+      for (const time of selectedTimes) {
+        if (newBookings.some(booking => booking.time === time)) continue;
+        const bookingId = crypto.randomUUID();
+        const designImagePath = state.designImageFile ? await DemoData.uploadDesignImage(bookingId, state.designImageFile) : null;
+        const row = await DemoData.createPendingBooking({ id:bookingId, date:dateStr, start:time, name, phone, removalService: removalService, designImagePath, lineAccessToken:state.lineAccessToken, benefit:selectedBenefit });
+        const newBooking = {
+          id:row.id, date:row.slot_date, time:row.start_time,
+          name:row.customer_name, phone:row.customer_phone,
+          removalService:row.removal_service, status:row.status,
+          slipPath:row.slip_path, slipUploadedAt:row.slip_uploaded_at,
+          cancelledAt:row.cancelled_at, cancelledByRole:row.cancelled_by_role,
+          refundStatus:row.refund_status,
+          createdAt:row.created_at, expiresAt:row.expires_at
+        };
+        newBookings.push(newBooking);
+        setPendingDraft(draftSignature, newBookings);
+      }
+      await refreshRealtimeData();
+      newBookings = pendingDraftBookings(state.currentPendingDraft);
+      if (newBookings.length) setPendingDraft(draftSignature, newBookings);
+    } catch (error) {
+      await refreshRealtimeData().catch(() => {});
+      alert(error?.message || 'จองคิวไม่สำเร็จ กรุณาลองใหม่');
+      return;
+    }
+    document.getElementById('timeModal').style.display = 'none';
+    document.getElementById('timeModal').classList.remove('mobile-quick');
+    renderCalendar();
+    
+    // Show payment with first booking info
+    if (newBookings.length > 0) {
+      setPendingDraft(draftSignature, newBookings);
+      showPaymentModal({
+        date: dateStr,
+        times: selectedTimes,
+        name: name,
+        phone: phone,
+        removalService: removalService,
+        expiresAt: newBookings.map(booking => booking.expiresAt).sort()[0]
+      });
+    }
+  }
+  
+  function removalServiceLabel(value) {
+    return state.services?.find(item => item.key === value)?.label || ({ gel:'ล้างเล็บเจล', pvc:'ล้างพีวีซี', none:'ไม่มี' })[value] || '—';
+  }
+
+  function showPaymentModal(booking) {
+    const date = new Date(booking.date + 'T00:00:00').toLocaleDateString('th-TH', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    
+    let detailsHtml = `
+      <div class="detail-row">
+        <span class="detail-label">วันที่:</span>
+        <span class="detail-value">${esc(date)}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">ช่วงเวลา:</span>
+        <span class="detail-value">${esc((booking.times || []).map(bookingSlotLabel).join(', '))}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">ชื่อ:</span>
+        <span class="detail-value">${esc(booking.name)}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">เบอร์:</span>
+        <span class="detail-value">${esc(booking.phone)}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">ล้างเล็บ:</span>
+        <span class="detail-value">${esc(removalServiceLabel(booking.removalService))}</span>
+      </div>
+    `;
+    
+    document.getElementById('bookingDetails').innerHTML = detailsHtml;
+    
+    const qrContainer = document.getElementById('qrcode');
+    qrContainer.innerHTML = '';
+    qrContainer.innerHTML = '<img src="demo-payment-qr.png" alt="QR Code สำหรับชำระเงิน" width="250" height="250">';
+    
+    startCountdown(booking.expiresAt);
+    state.paymentSlipFile = null;
+    document.getElementById('paymentSlipInput').value = '';
+    document.getElementById('paymentSlipPreview').innerHTML = '';
+    document.getElementById('bookingPolicyAccepted').checked = false;
+    updatePaymentConfirmationState();
+    
+    document.getElementById('paymentModal').style.display = 'flex';
+  }
+  
+  let countdownIntervalId = null;
+  
+  function startCountdown(expiresAt) {
+    if (countdownIntervalId) clearInterval(countdownIntervalId);
+    const timerElement = document.getElementById('timer');
+    const deadline = expiresAt ? new Date(expiresAt).getTime() : Date.now() + PENDING_EXPIRY_MS;
+    const renderRemaining = () => {
+      const seconds = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      timerElement.textContent = `${mins}:${String(secs).padStart(2, '0')}`;
+      if (seconds <= 0) {
+        clearInterval(countdownIntervalId);
+        countdownIntervalId = null;
+        clearPendingDraft();
+        timerElement.textContent = 'หมดเวลา';
+      }
+    };
+    renderRemaining();
+    countdownIntervalId = setInterval(renderRemaining, 1000);
+  }
+
+  function stopPaymentCountdown() {
+    if (countdownIntervalId) {
+      clearInterval(countdownIntervalId);
+      countdownIntervalId = null;
+    }
+  }
+
+  function backToBookingForm() {
+    stopPaymentCountdown();
+    document.getElementById('paymentModal').style.display = 'none';
+    document.getElementById('timeModal').style.display = 'flex';
+  }
+
+  function closePaymentModal() {
+    stopPaymentCountdown();
+    document.getElementById('paymentModal').style.display = 'none';
+    clearTemporaryBookingFlow();
+    renderCalendar();
+    updateAdminPanel();
+  }
+
+  function handlePaymentSlipSelect(input) {
+    const file = input.files && input.files[0];
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!file) { state.paymentSlipFile=null; updatePaymentConfirmationState(); return; }
+    if (!allowedTypes.includes(file.type) || file.size > 5 * 1024 * 1024) {
+      state.paymentSlipFile = null;
+      input.value = '';
+      document.getElementById('paymentSlipPreview').innerHTML = '';
+      updatePaymentConfirmationState();
+      alert('กรุณาแนบไฟล์ JPEG, PNG หรือ WebP ขนาดไม่เกิน 5MB');
+      return;
+    }
+    state.paymentSlipFile = file;
+    updatePaymentConfirmationState();
+    const reader = new FileReader();
+    reader.onload = event => {
+      document.getElementById('paymentSlipPreview').innerHTML = `<img src="${esc(event.target.result)}" alt="ตัวอย่างสลิปชำระเงิน">`;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function updatePaymentConfirmationState() {
+    const button=document.getElementById('confirmSlipButton');
+    const accepted=document.getElementById('bookingPolicyAccepted').checked;
+    button.disabled=!(state.paymentSlipFile&&accepted);
+  }
+
+  function resumePendingPayment(id) {
+    purgeExpiredPendingBookings();
+    const booking = state.bookings.find(item => String(item.id) === String(id) && item.status === 'pending');
+    if (!booking) {
+      alert('รายการนี้หมดเวลาหรือไม่สามารถชำระได้แล้ว');
+      updateAdminPanel();
+      return;
+    }
+    openTimeModal(booking.date);
+    state.selectedTimes = [booking.time];
+    document.getElementById('customerName').value = booking.name;
+    document.getElementById('customerPhone').value = booking.phone;
+    const removalInput = document.querySelector(`input[name="removalService"][value="${booking.removalService}"]`);
+    if (removalInput) removalInput.checked = true;
+    const selectedButton = Array.from(document.querySelectorAll('#timeGrid .time-btn')).find(button => button.dataset.time === booking.time);
+    if (selectedButton) selectedButton.classList.add('selected');
+    updateSelectedTimesDisplay();
+    document.getElementById('timeModal').style.display = 'none';
+    const draftSignature = bookingDraftSignature({
+      date:booking.date, times:[booking.time], name:booking.name,
+      phone:booking.phone, removalService:booking.removalService
+    });
+    setPendingDraft(draftSignature, [booking]);
+    showPaymentModal({
+      date: booking.date,
+      times: [booking.time],
+      name: booking.name,
+      phone: booking.phone,
+      removalService: booking.removalService,
+      expiresAt: booking.expiresAt
+    });
+  }
+
+  async function submitPaymentSlip() {
+    const selectedIds = new Set((state.currentPaymentIds || []).map(String));
+    const selected = state.bookings.filter(item => selectedIds.has(String(item.id)) && item.status === 'pending');
+    const file = state.paymentSlipFile;
+    if(!document.getElementById('bookingPolicyAccepted').checked) {
+      alert('กรุณาอ่านและยอมรับเงื่อนไขการจองก่อนยืนยันคิว');
+      return;
+    }
+    if (!file) {
+      alert('กรุณาแนบสลิปก่อนยืนยันคิว');
+      return;
+    }
+    if (!selected.length) {
+      alert('รายการนี้หมดเวลาหรือมีผู้ได้คิวแล้ว');
+      closePaymentModal();
+      return;
+    }
+
+    let won = 0;
+    let lost = 0;
+    const button = document.getElementById('confirmSlipButton');
+    button.disabled = true;
+    try {
+      for (const booking of selected) {
+        const slipPath = await DemoData.uploadPaymentSlip(booking.id, file);
+        if (await DemoData.claimBooking(booking.id, slipPath)) won++;
+        else lost++;
+      }
+      await refreshRealtimeData();
+    } catch (error) {
+      await refreshRealtimeData().catch(() => {});
+      alert(error?.message || 'แนบสลิปไม่สำเร็จ กรุณาลองใหม่');
+      button.disabled = false;
+      return;
+    }
+    clearPendingDraft();
+    closePaymentModal();
+    renderCalendar();
+    updateAdminPanel();
+    const listButton = document.querySelector('.mobile-nav-btn[data-tab="admin"]');
+    if (listButton) mobileSwitchTab('admin', listButton);
+    alert(lost ? 'รอบนี้มีผู้จองแล้ว' : won ? 'แนบสลิปแล้ว คุณได้คิวเรียบร้อยค่ะ' : 'รอบนี้มีผู้จองแล้ว');
+    window.PromotionUI?.refresh(true);
+  }
+
+  function pendingRemainingLabel(booking) {
+    const expires = booking.expiresAt ? new Date(booking.expiresAt).getTime() : new Date(booking.createdAt).getTime() + PENDING_EXPIRY_MS;
+    const remaining = Math.max(0, expires - Date.now());
+    const mins = Math.floor(remaining / 60000);
+    const secs = Math.floor((remaining % 60000) / 1000);
+    return `${mins}:${String(secs).padStart(2, '0')}`;
+  }
+
+  const CUSTOMER_CANCELLATION_POLICY = 'ยกเลิกก่อนเวลานัดอย่างน้อย 48 ชม. คืนเงินมัดจำ หากเหลือน้อยกว่า 48 ชม. ขอสงวนสิทธิ์ไม่คืนเงิน';
+
+  async function cancelCustomerBooking(id) {
+    if (!window.confirm('ยืนยันยกเลิกคิวนี้ใช่ไหม')) return;
+    try {
+      await DemoData.cancelBooking(id);
+      await refreshRealtimeData();
+    } catch (error) {
+      await refreshRealtimeData().catch(() => {});
+      alert(error?.message || 'ยกเลิกคิวไม่สำเร็จ กรุณาลองใหม่');
+    }
+  }
+
+  function activeRescheduleFor(bookingId) {
+    return state.reschedules.find(item => String(item.booking_id) === String(bookingId) && ['awaiting_slip','pending_review'].includes(item.status));
+  }
+
+  function rescheduleStatusText(request) {
+    if (!request) return '';
+    if (request.status === 'awaiting_slip') return `รอแนบสลิปค่าเลื่อนคิว ${pendingRemainingLabel({ expiresAt:request.expires_at })}`;
+    if (request.status === 'pending_review') return 'รอตรวจสอบสลิปค่าเลื่อนคิว';
+    if (request.status === 'approved') return 'เลื่อนคิวสำเร็จแล้ว';
+    if (request.status === 'rejected') return 'ร้านไม่อนุมัติการเลื่อนคิว';
+    if (request.status === 'expired') return 'คำขอเลื่อนคิวหมดเวลา';
+    return 'ยกเลิกคำขอเลื่อนคิวแล้ว';
+  }
+
+  function ensureRescheduleModal() {
+    let overlay = document.getElementById('rescheduleOverlay');
+    if (overlay) return overlay;
+    overlay = document.createElement('div');
+    overlay.id = 'rescheduleOverlay';
+    overlay.className = 'reschedule-overlay';
+    overlay.hidden = true;
+    overlay.innerHTML = `<form id="rescheduleForm" class="reschedule-sheet">
+      <h3>เลื่อนคิวทำเล็บ</h3><p>ต้องเลื่อนก่อนวันนัด และชำระเพิ่ม 20 บาท วันเดียวกับวันนัดไม่สามารถเลื่อนได้ แนบสลิปสำเร็จแล้วย้ายคิวทันที โดยใช้มัดจำเดิมค่ะ</p>
+      <input id="rescheduleBookingId" type="hidden">
+      <label for="rescheduleDate">วันที่ใหม่</label><input id="rescheduleDate" type="date" required>
+      <label for="rescheduleStart">ช่วงเวลาใหม่</label><select id="rescheduleStart" required></select>
+      <div class="reschedule-policy"><strong>📌 แจ้งเงื่อนไขการเลื่อน–ยกเลิกคิว</strong><ul><li>เลื่อนคิวได้ก่อนวันนัด (ก่อน 00.00 น.) มีค่าดำเนินการ 20 บาท</li><li>ไม่สามารถเลื่อนคิวภายในวันนัดได้</li><li>ยกเลิกก่อนเวลานัดอย่างน้อย 48 ชั่วโมง รับเงินมัดจำคืน</li><li>ยกเลิกน้อยกว่า 48 ชั่วโมง ขอสงวนสิทธิ์ไม่คืนเงินมัดจำ</li></ul><p>รบกวนลูกค้าตรวจสอบวันและเวลาก่อนจองนะคะ 💗</p></div>
+      <div class="reschedule-payment-qr"><strong>สแกนชำระค่าเลื่อนคิว 20 บาท</strong><img src="reschedule-payment-qr.png" alt="QR Code สำหรับชำระค่าเลื่อนคิว 20 บาท" width="250" height="316"></div>
+      <label for="rescheduleSlip">แนบสลิปค่าเลื่อนคิว 20 บาท</label><input id="rescheduleSlip" type="file" accept="image/jpeg,image/png,image/webp" required>
+      <div class="reschedule-actions"><button type="button" class="customer-cancel-btn" onclick="closeRescheduleModal()">ยกเลิก</button><button id="rescheduleSubmit" type="submit" class="customer-pay-btn">ส่งคำขอเลื่อนคิว</button></div>
+    </form>`;
+    document.body.appendChild(overlay);
+    document.getElementById('rescheduleForm').addEventListener('submit', submitRescheduleRequest);
+    return overlay;
+  }
+
+  function startRescheduleSelection(bookingId) {
+    const booking = state.bookings.find(item => String(item.id) === String(bookingId));
+    if (!booking || !RescheduleCore.canReschedule(booking)) return;
+    state.rescheduleBookingId = bookingId;
+    const bookingTab = document.querySelector('.mobile-nav-btn[data-tab="booking"]');
+    if (bookingTab) mobileSwitchTab('booking',bookingTab);
+    renderCalendar();
+  }
+
+  function showReschedulePaymentForSlot(dateStr,timeStr) {
+    const bookingId = state.rescheduleBookingId;
+    const booking = state.bookings.find(item => String(item.id) === String(bookingId));
+    if (!booking || !RescheduleCore.canReschedule(booking) || !canBookSlot(dateStr,timeStr)) {
+      alert('รอบนี้ไม่สามารถใช้เลื่อนคิวได้ กรุณาเลือกรอบอื่น');
+      return;
+    }
+    const overlay = ensureRescheduleModal();
+    document.getElementById('rescheduleBookingId').value = bookingId;
+    document.getElementById('rescheduleDate').value = dateStr;
+    const startSelect = document.getElementById('rescheduleStart');
+    startSelect.innerHTML = bookingSlotsForDate(dateStr).map(slot => `<option value="${slot.start}">${slot.start}–${slot.end}</option>`).join('');
+    startSelect.value = timeStr;
+    document.getElementById('rescheduleSlip').value = '';
+    overlay.hidden = false;
+  }
+
+  function closeRescheduleModal() {
+    const modal=document.getElementById('rescheduleOverlay');
+    if(modal) modal.hidden=true;
+    state.rescheduleBookingId=null;
+    renderCalendar();
+  }
+
+  async function submitRescheduleRequest(event) {
+    event.preventDefault();
+    const button = document.getElementById('rescheduleSubmit');
+    const bookingId = document.getElementById('rescheduleBookingId').value;
+    const newDate = document.getElementById('rescheduleDate').value;
+    const newStart = document.getElementById('rescheduleStart').value;
+    const file = document.getElementById('rescheduleSlip').files[0];
+    button.disabled = true; button.textContent = 'กำลังส่งคำขอ…';
+    try {
+      const result = await DemoData.createRescheduleRequest(bookingId,newDate,newStart);
+      const request = result?.request || result;
+      const requestId = request?.id;
+      if (!requestId) throw new Error('สร้างคำขอเลื่อนคิวไม่สำเร็จ');
+      const slipPath = await DemoData.uploadRescheduleSlip(requestId,file);
+      await DemoData.submitRescheduleSlip(requestId,slipPath);
+      closeRescheduleModal();
+      await refreshRealtimeData();
+      alert('เลื่อนคิวสำเร็จแล้วค่ะ มัดจำและสิทธิ์เดิมยังอยู่ครบ ดูวันและเวลาใหม่ได้ที่รายการจอง');
+    } catch (error) {
+      alert(error?.message || 'ส่งคำขอเลื่อนคิวไม่สำเร็จ กรุณาลองใหม่');
+      await refreshRealtimeData().catch(() => {});
+    } finally { button.disabled=false; button.textContent='ส่งคำขอเลื่อนคิว'; }
+  }
+
+  function updateAdminPanel() {
+    purgeExpiredPendingBookings();
+    const bookings = state.bookings
+      .filter(item => ['pending', 'approved', 'lost', 'cancelled'].includes(item.status))
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    if (!bookings.length) {
+      document.getElementById('adminContent').innerHTML = `<h2 class="customer-list-title">รายการจองของฉัน</h2><p class="customer-policy">${CUSTOMER_CANCELLATION_POLICY}</p><div class="customer-empty">ยังไม่มีรายการจองค่ะ</div>`;
+      return;
+    }
+
+    const cards = bookings.map(booking => {
+      const dateText = new Date(booking.date + 'T00:00:00').toLocaleDateString('th-TH', { day:'numeric', month:'long', year:'numeric' });
+      const statusText = booking.status === 'approved' ? 'ได้คิวแล้ว'
+        : booking.status === 'lost' ? 'คิวถูกจองแล้ว'
+        : booking.status === 'cancelled' && booking.refundStatus === 'refund_due' ? 'ยกเลิกแล้ว — คืนเงินมัดจำ'
+        : booking.status === 'cancelled' ? 'ยกเลิกแล้ว — ไม่คืนเงินมัดจำ'
+        : `รอโอนมัดจำ ${pendingRemainingLabel(booking)}`;
+      const statusClass = booking.status === 'approved' ? 'approved' : booking.status === 'lost' ? 'lost' : booking.status === 'cancelled' ? 'cancelled' : 'pending';
+      const sentAt = AttachmentUiCore.formatThaiTimestamp(booking.createdAt);
+      const slipAt = AttachmentUiCore.formatThaiTimestamp(booking.slipUploadedAt);
+      const uploadTimes = `<div class="customer-upload-time"><span>ส่งคำจองเมื่อ</span><strong>${esc(sentAt)}</strong><span>แนบสลิปเมื่อ</span><strong>${esc(slipAt)}</strong></div>`;
+      const attachmentItems = [];
+      if (booking.designImagePath) attachmentItems.push(`<div class="customer-attachment"><p class="customer-attachment-label">รูปแบบเล็บ</p><div class="customer-attachment-thumb" data-customer-design-placeholder="${esc(booking.id)}">กำลังโหลดรูป…</div></div>`);
+      if (booking.slipPath) attachmentItems.push(`<div class="customer-attachment"><p class="customer-attachment-label">สลิปมัดจำ</p><div class="customer-attachment-thumb" data-customer-slip-placeholder="${esc(booking.id)}">กำลังโหลดรูป…</div></div>`);
+      const attachments = attachmentItems.length ? `<div class="customer-attachment-grid">${attachmentItems.join('')}</div>` : '';
+      const refundNote = booking.status === 'cancelled' && booking.refundStatus === 'refund_due'
+        ? '<div class="customer-refund-note">แคปภาพหน้านี้แล้วติดต่อ LINE @demoshop</div>' : '';
+      const activeReschedule = activeRescheduleFor(booking.id);
+      const latestReschedule = state.reschedules.find(item => String(item.booking_id) === String(booking.id));
+      const mayReschedule = booking.status === 'approved' && RescheduleCore.canReschedule(booking);
+      const rescheduleNote = latestReschedule ? `<div class="reschedule-note">${esc(rescheduleStatusText(latestReschedule))}</div>` : '';
+      const actionButtons = booking.status === 'pending'
+        ? `<div class="customer-card-actions"><button class="customer-pay-btn" onclick="resumePendingPayment('${esc(booking.id)}')">ชำระมัดจำ</button><button class="customer-cancel-btn" onclick="cancelCustomerBooking('${esc(booking.id)}')">ยกเลิกคิว</button></div>`
+        : booking.status === 'approved'
+          ? `<div class="customer-card-actions"><button class="customer-reschedule-btn" ${activeReschedule || !mayReschedule ? 'disabled' : ''} onclick="startRescheduleSelection('${esc(booking.id)}')">${activeReschedule ? 'กำลังรอตรวจสอบการเลื่อนคิว' : mayReschedule ? 'เลื่อนคิว (+20 บาท)' : 'ไม่สามารถเลื่อนได้'}</button><button class="customer-cancel-btn" onclick="cancelCustomerBooking('${esc(booking.id)}')">ยกเลิกคิว</button></div>` : '';
+      return `<article class="customer-booking-card">
+        <div class="customer-booking-top">
+          <div><div class="customer-booking-date">${esc(dateText)}</div><div class="customer-booking-time">${esc(bookingSlotLabel(booking.time))}</div></div>
+          <span class="customer-status ${statusClass}"${booking.status === 'pending' ? ` data-customer-pending-status="${esc(booking.id)}"` : ''}>${statusText}</span>
+        </div>
+        <div class="customer-booking-detail"><span>ชื่อ</span><strong>${esc(booking.name)}</strong><span>เบอร์</span><strong>${esc(booking.phone)}</strong><span>เวลา</span><strong>${esc(bookingSlotLabel(booking.time))}</strong><span>ล้างเล็บ</span><strong>${esc(removalServiceLabel(booking.removalService))}</strong></div>
+        ${uploadTimes}${attachments}${refundNote}${rescheduleNote}${actionButtons}
+      </article>`;
+    }).join('');
+    document.getElementById('adminContent').innerHTML = `<h2 class="customer-list-title">รายการจองของฉัน</h2>${stampCardHtml()}${partnerCouponsHtml()}<p class="customer-policy">${CUSTOMER_CANCELLATION_POLICY}</p><div class="customer-booking-list">${cards}</div>`;
+    loadCustomerAttachmentThumbnails();
+  }
+
+  async function loadCustomerAttachmentThumbnails() {
+    const jobs = [];
+    document.querySelectorAll('[data-customer-design-placeholder]').forEach(placeholder => jobs.push((async () => {
+      const booking = state.bookings.find(item => String(item.id) === String(placeholder.dataset.customerDesignPlaceholder));
+      if (!booking?.designImagePath) return;
+      try {
+        const url = await DemoData.getDesignImageUrl(booking.designImagePath);
+        if (!placeholder.isConnected) return;
+        placeholder.outerHTML = `<button class="customer-attachment-thumb" type="button" data-customer-attachment="design" data-booking-id="${esc(booking.id)}" aria-label="ดูรูปแบบเล็บขนาดเต็ม"><img src="${esc(url)}" alt="รูปแบบเล็บที่แนบ"></button>`;
+      } catch (_) { if (placeholder.isConnected) placeholder.textContent = 'โหลดรูปไม่สำเร็จ'; }
+    })()));
+    document.querySelectorAll('[data-customer-slip-placeholder]').forEach(placeholder => jobs.push((async () => {
+      const booking = state.bookings.find(item => String(item.id) === String(placeholder.dataset.customerSlipPlaceholder));
+      if (!booking?.slipPath) return;
+      try {
+        const url = await DemoData.getSlipUrl(booking.slipPath);
+        if (!placeholder.isConnected) return;
+        placeholder.outerHTML = `<button class="customer-attachment-thumb" type="button" data-customer-attachment="slip" data-booking-id="${esc(booking.id)}" aria-label="ดูสลิปขนาดเต็ม"><img src="${esc(url)}" alt="สลิปมัดจำที่แนบ"></button>`;
+      } catch (_) { if (placeholder.isConnected) placeholder.textContent = 'โหลดรูปไม่สำเร็จ'; }
+    })()));
+    await Promise.all(jobs);
+    document.querySelectorAll('[data-customer-attachment]').forEach(button => button.addEventListener('click', () => openCustomerAttachment(button.dataset.bookingId, button.dataset.customerAttachment)));
+  }
+
+  async function openCustomerAttachment(bookingId, kind) {
+    const booking = state.bookings.find(item => String(item.id) === String(bookingId));
+    const path = kind === 'design' ? booking?.designImagePath : booking?.slipPath;
+    if (!path) return;
+    const modal = document.getElementById('customerAttachmentModal');
+    const loading = document.getElementById('customerAttachmentLoading');
+    const image = document.getElementById('customerAttachmentImage');
+    const saveButton = document.getElementById('saveCustomerAttachment');
+    document.getElementById('customerAttachmentTitle').textContent = kind === 'design' ? 'รูปแบบเล็บที่แนบ' : 'สลิปมัดจำ';
+    currentCustomerAttachment = null;
+    image.hidden = true;
+    image.removeAttribute('src');
+    saveButton.hidden = true;
+    loading.hidden = false;
+    loading.textContent = 'กำลังโหลดรูป…';
+    modal.hidden = false;
+    try {
+      const url = kind === 'design' ? await DemoData.getDesignImageUrl(path) : await DemoData.getSlipUrl(path);
+      const filename = AttachmentUiCore.imageFilename(kind, booking.id, path);
+      currentCustomerAttachment = { url, filename };
+      image.src = url;
+      image.alt = kind === 'design' ? 'รูปแบบเล็บที่แนบ' : 'สลิปมัดจำ';
+      image.hidden = false;
+      saveButton.hidden = false;
+      loading.hidden = true;
+    } catch (error) { loading.textContent = error.message || 'โหลดรูปไม่สำเร็จ'; }
+  }
+
+  function closeCustomerAttachment() {
+    document.getElementById('customerAttachmentModal').hidden = true;
+    document.getElementById('customerAttachmentImage').removeAttribute('src');
+    currentCustomerAttachment = null;
+  }
+
+  async function saveCustomerAttachment() {
+    if (!currentCustomerAttachment) return;
+    const button = document.getElementById('saveCustomerAttachment');
+    button.disabled = true;
+    button.textContent = 'กำลังบันทึก…';
+    try {
+      await AttachmentUiCore.downloadImage(currentCustomerAttachment.url, currentCustomerAttachment.filename);
+      button.textContent = 'บันทึกรูปแล้ว';
+    } catch (error) {
+      alert(error.message || 'บันทึกรูปไม่สำเร็จ กรุณาลองใหม่');
+      button.textContent = 'บันทึกรูป';
+    } finally { button.disabled = false; }
+  }
+  
+  function switchTab(tabName) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    
+    document.getElementById(tabName).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  function mobileSwitchTab(tabName, button) {
+    const target = document.getElementById(tabName);
+    if (!target || (state.userRole !== 'owner' && tabName !== 'booking' && tabName !== 'admin')) {
+      alert('เมนูนี้สำหรับเจ้าของร้าน');
+      return;
+    }
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.mobile-nav-btn').forEach(el => el.classList.remove('active'));
+    target.classList.add('active');
+    button.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  
+  init();
+</script>
+
+<link rel="stylesheet" href="promotion.css?v=20260912d">
+<script src="promotion-core.js?v=20260912e"></script>
+<script src="promotion-ui.js?v=20260913-referral-terms"></script>
+<script>
+  // shop texts from demo-config.js
+  document.querySelectorAll('[data-shop]').forEach(el => { const v = window.DEMO_CONFIG?.[el.dataset.shop]; if (v != null) el.textContent = String(v); });
+
+  async function loadShopExtras() {
+    try {
+      const services = await DemoData.listServices();
+      if (services.length) {
+        state.services = services;
+        document.getElementById('serviceOptions').innerHTML = services.filter(item => item.active).map(item =>
+          `<label class="removal-option"><input type="radio" name="removalService" value="${esc(item.key)}" required aria-required="true"><span>${esc(item.label)}${item.price != null ? ` · ${Number(item.price).toLocaleString()}฿` : ''}</span></label>`).join('');
+      }
+    } catch (_) {}
+    try { state.waitlist = await DemoData.listMyWaitlist(); } catch (_) { state.waitlist = []; }
+    try { presence = DemoData.bookingPresence(renderLiveBooking); } catch (_) {}
+  }
+
+  async function joinWaitlist(date, time, button) {
+    button.disabled = true;
+    try {
+      await DemoData.joinWaitlist(date, time);
+      state.waitlist = [...(state.waitlist || []), `${date}_${time}`];
+      renderCalendar();
+    } catch (error) {
+      button.disabled = false;
+      alert(error?.message === 'LINE_FRIEND_REQUIRED' || /LINE/.test(error?.details?.message || '') ? 'เชื่อม LINE ก่อน แล้วกดอีกครั้งค่ะ' : 'บันทึกไม่สำเร็จ กรุณาลองใหม่');
+    }
+  }
+
+  // live "someone is booking" bubble
+  let presence = null;
+  function trackMyPresence() {
+    const date = document.getElementById('timeModal').dataset.selectedDate, time = state.selectedTimes[0];
+    const initial = (document.getElementById('customerName').value.trim()[0] || '').toUpperCase();
+    presence?.track(date && time ? { date, time, initial } : null);
+  }
+  document.getElementById('customerName')?.addEventListener('change', trackMyPresence);
+  function renderLiveBooking(peers) {
+    let el = document.getElementById('liveBooking');
+    const peer = peers[0];
+    if (!peer) { el?.remove(); return; }
+    if (!el) {
+      el = document.createElement('button'); el.id = 'liveBooking'; el.type = 'button'; el.className = 'live-booking';
+      el.addEventListener('click', () => el.classList.toggle('open'));
+      document.body.append(el);
+    }
+    const day = new Date(`${peer.date}T00:00:00`).toLocaleDateString('th-TH', { weekday:'short', day:'numeric', month:'short' });
+    const more = peers.length > 1 ? ` และอีก ${peers.length - 1} คน` : '';
+    el.setAttribute('aria-label', `มีคนกำลังจองคิว ${day} ${peer.time}`);
+    el.innerHTML = `<span class="av">${esc(peer.initial || '•')}</span><span class="info"><b>${peer.initial ? `คุณ${esc(peer.initial)}.` : 'มีคน'} กำลังจองอยู่${more}</b>${esc(day)} · ${esc(bookingSlotLabel(peer.time))}</span>`;
+  }
+
+  // stamp card: completed visits (paid, appointment passed, not marked no-show)
+  function stampCardHtml() {
+    const goal = Number(window.DEMO_CONFIG?.STAMP_GOAL) || 0;
+    if (!goal) return '';
+    const today = new Date().toISOString().slice(0, 10);
+    const visits = state.bookings.filter(b => b.status === 'approved' && b.date < today && b.attendance !== 'no_show').length;
+    const filled = visits % (goal + 1);
+    const reward = filled === goal;
+    const dots = Array.from({ length:goal + 1 }, (_, i) => i === goal ? `<i class="free${reward ? ' on' : ''}">ฟรี</i>` : `<i class="${i < filled ? 'on' : ''}">${i < filled ? '✓' : i + 1}</i>`).join('');
+    const title = reward ? 'ครั้งนี้รับสิทธิ์ฟรี! แสดงหน้านี้ให้ร้านดูตอนชำระเงิน' : `อีก ${goal - filled} ครั้ง ${esc(window.DEMO_CONFIG?.STAMP_REWARD || 'รับสิทธิ์ฟรี 1 ครั้ง')}`;
+    return `<section class="stamp-card"><b>${title}</b><small>นับเฉพาะคิวที่จองผ่านระบบและมาตามนัด</small><div class="stamp-dots">${dots}</div></section>`;
+  }
+
+  // partner coupons from demo-config.js, shown to customers who have a paid booking
+  function partnerCouponsHtml() {
+    const list = (window.DEMO_CONFIG?.PARTNER_COUPONS || []).filter(item => item?.name && item?.offer);
+    if (!list.length || !state.bookings.some(b => b.status === 'approved')) return '';
+    return `<div class="partner-coupons">${list.map(item => {
+      const href = /^https:\/\//.test(item.url || '') ? item.url : null;
+      const body = `<span><b>${esc(item.name)}</b> · ${esc(item.offer)}</span>${item.code ? `<b>${esc(item.code)}</b>` : ''}`;
+      return href ? `<a href="${esc(href)}" target="_blank" rel="noopener sponsored">${body}</a>` : `<a>${body}</a>`;
+    }).join('')}</div>`;
+  }
+</script>
+<script>
+  (() => {
+    const list = (window.DEMO_CONFIG?.SPONSORS || []).filter(item => item?.name && /^https:\/\//.test(item.url || '')).slice(0, 2);
+    const row = document.getElementById('sponsorRow');
+    if (!row || !list.length) return;
+    row.append('สนับสนุนโดย');
+    list.forEach(item => {
+      const a = document.createElement('a');
+      a.href = item.url; a.target = '_blank'; a.rel = 'noopener sponsored';
+      if (item.logo) { const img = document.createElement('img'); img.src = item.logo; img.alt = ''; a.append(img); }
+      a.append(item.name);
+      row.append(a);
+    });
+    row.hidden = false;
+  })();
+</script>
+</body>
+</html>
